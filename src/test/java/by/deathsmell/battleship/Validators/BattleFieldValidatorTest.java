@@ -1,10 +1,11 @@
-import Validators.BattleFieldValidator;
+package by.deathsmell.battleship.Validators;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BattleFieldTest {
+public class BattleFieldValidatorTest {
 
     private static final int[][] battleField = {
             //  1  2  3  4  5  6  7  8  9   X  Y
@@ -36,6 +37,7 @@ public class BattleFieldTest {
     @Test
     public void returnTrueIfFieldValid() {
         assertTrue(BattleFieldValidator.fieldValidator(battleField));
+
     }
 
     @Test

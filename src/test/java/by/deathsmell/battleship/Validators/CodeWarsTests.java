@@ -1,6 +1,7 @@
+package by.deathsmell.battleship.Validators;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import Validators.BattleFieldValidator;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

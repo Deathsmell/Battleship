@@ -1,13 +1,10 @@
-package Validators;
-
-import utils.Helper;
+package by.deathsmell.battleship.Validators;
 
 import java.util.Arrays;
 
 public class BattleFieldValidator {
     public static boolean fieldValidator(int[][] field) {
 
-        Helper.helper(Arrays.deepToString(field));
         if (field.length != 10 && field[0].length != 10) {
             return false;
         }
@@ -104,10 +101,7 @@ public class BattleFieldValidator {
                 }
             }
         }
-        if (array[1] > 0 || array[2] > 0 || array[3] > 0 || array[4] > 0 ){
-            return false;
-        }
-        return true;
+        return array[1] <= 0 && array[2] <= 0 && array[3] <= 0 && array[4] <= 0;
     }
 
 }
