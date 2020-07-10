@@ -13,7 +13,7 @@ public class BattleFieldValidator {
         int cruisers = 2;
         int destroyers = 3;
         int submarines = 4;
-        int [] array = {0,submarines,destroyers,cruisers,battleship};
+        int[] array = {0, submarines, destroyers, cruisers, battleship};
 
         boolean valid = true;
 
@@ -87,11 +87,11 @@ public class BattleFieldValidator {
                     }
 
                     valid = sumAreaBattleship == sumAreaWithOutBattleship;
-                    if (valid && sumAreaBattleship < 5){
+                    if (valid && sumAreaBattleship < 5) {
                         array[sumAreaBattleship]--;
                     }
                 }
-                if (array[1] < 0 || array[2] < 0 || array[3] < 0 || array[4] < 0 ){
+                if (array[1] < 0 || array[2] < 0 || array[3] < 0 || array[4] < 0) {
                     return false;
                 }
                 if (!valid) {

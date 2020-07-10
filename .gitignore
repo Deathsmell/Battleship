@@ -5,3 +5,6 @@
 /build/classes/java/test/
 
 /yarn.lock
+/node_modules/
+/gradle/
+/.idea/
