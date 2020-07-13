@@ -2,16 +2,7 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
-    mode: "development",
-    entry: path.join(__dirname, 'src', 'main', 'resources', 'static', 'js', 'index.js'),
-    devServer: {
-        contentBase: './dist',
-        compress: true,
-        port: 8000,
-        allowedHosts: [
-            'localhost:8080'
-        ]
-    },
+    entry: path.join(__dirname, 'src', 'main', 'resources', 'js', 'index.js'),
     module: {
         rules: [
             {
@@ -28,6 +19,7 @@ module.exports = {
                 test: /\.vue$/,
                 loader: 'vue-loader'
             },
+            // QUESTION: Нужен ли этот обработчик ?
             {
                 test: /\.css$/,
                 use: [
@@ -43,12 +35,6 @@ module.exports = {
                     'css-loader',
                     {
                         loader: 'sass-loader',
-                        // Requires sass-loader@^7.0.0
-                        options: {
-                            implementation: require('sass'),
-                            fiber: require('fibers'),
-                            indentedSyntax: true // optional
-                        },
                         // Requires sass-loader@^8.0.0
                         options: {
                             implementation: require('sass'),
@@ -68,7 +54,7 @@ module.exports = {
     ],
     resolve: {
         modules: [
-            path.join(__dirname, 'src', 'main', 'resources', 'static', 'js'),
+            path.join(__dirname, 'src', 'main', 'resources', 'js'),
             path.join(__dirname, 'node_modules'),
         ],
     }
