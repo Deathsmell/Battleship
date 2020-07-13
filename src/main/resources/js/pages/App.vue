@@ -1,14 +1,16 @@
 <template>
-    <BattleField></BattleField>
+    <v-app>
+        <BattleField></BattleField>
+    </v-app>
 </template>
 
 <script>
-    import BattleField from "./BattleField.vue";
+    import BattleField from "../Components/BattleField.vue";
 
     export default {
         name: "App",
         components: {
-          BattleField,
+            BattleField,
         },
         data: () => ({}),
     }

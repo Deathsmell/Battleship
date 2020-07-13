@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <table class="field">
+    <div class="ma-5">
+        <table>
             <tr>
                 <th v-for=" y in fields.length + 1">{{y - 1}}</th>
             </tr>
@@ -10,19 +10,40 @@
                 <td class="coordinate">{{i}}</td>
                 <td
                         v-for="f in fields[i - 1].length"
-                        v-bind:class="{'field-void': whatColor(fields[i-1][f -1]), 'field-ship': !whatColor(fields[i-1][f - 1]) }"
+                        v-bind:class="{'field-void': whatColor(i,f), 'field-ship': !whatColor(i,f) }"
                         v-bind:id="i+'-'+f"
                         @click="isShip(i,f)"
                 >{{fields[i-1][f - 1]}}
                 </td>
             </tr>
         </table>
-        <button @click="clearField()" type="submit">Очистить поле</button>
-        <button @click="validateField()" type="submit">Проверить</button>
+        <div
+                class="mt-3"
+        >
+            <v-btn
+                    @click="clearField()"
+            >Очистить поле
+            </v-btn>
+            <v-btn
+                    @click="validateField()"
+            >Проверить
+            </v-btn>
+        </div>
+        <v-snackbar
+                v-model="snackbar"
+                bottom="bottom"
+                :color="color"
+                multi-line
+                timeout="6000"
+                top
+        >
+            {{text}}
+        </v-snackbar>
     </div>
 </template>
 
 <script>
+
     let API = 'http://localhost:8080/';
 
     export default {
@@ -31,6 +52,10 @@
             return {
                 hasVoid: false,
                 hasShip: false,
+                isYourBoard: true,
+                snackbar: false,
+                text: 'Error',
+                color: 'error',
                 fields: [
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -53,8 +78,8 @@
                     })
                 })
             },
-            whatColor(cell) {
-                return cell === 0
+            whatColor(array, index) {
+                return this.fields[array - 1][index - 1] === 0
             },
             isShip(array, index) {
                 let temp = this.fields[array - 1][index - 1]
@@ -73,44 +98,42 @@
             validateField() {
                 this.$http.post(API + 'validationField', this.fields)
                     .then(response => {
-                        console.log(response.status);
+                        this.snackbar = true;
+                        this.text = response.status + ' Success validation'
+                        this.color = 'alert'
+                        // console.log(snackbar + ' ' + response.status)
                     })
                     .catch(error => {
-                        console.log(error.status);
+                        console.log(error);
+                        this.snackbar = true;
+                        this.text = error.status
+                        this.color = 'error'
                     })
             }
         }
     }
 </script>
 
-<style scoped>
-    table, th, td {
-        border: 1px solid black;
-    }
+<style lang="sass" scoped>
+    table, th, td
+        border: 1px solid black
 
-    th, td {
-        height: 25px;
-        width: 25px;
-        text-align: center;
-    }
+        th, td
+            height: 25px
+            width: 25px
+            text-align: center
 
-    /*table {*/
-    /*    position: absolute;*/
-    /*    top: 25%;*/
-    /*    left: 40%;*/
-    /*}*/
+        .coordinate
+            font-weight: bold
 
-    .coordinate {
-        font-weight: bold;
-    }
 
-    .field-void {
-        background: blue;
-        font: 0 Arial;
-    }
+        .field-void
+            background: #1565C0
+            font: 0 Arial
 
-    .field-ship {
-        background: black;
-        font: 0 Arial;
-    }
+
+        .field-ship
+            background: #37474F
+            font: 0 Arial
+
 </style>

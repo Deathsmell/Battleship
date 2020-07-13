@@ -1,12 +1,31 @@
 Battleship
 ---
 
-Battleship wars game
+This project the game where's two players
+create yourself fleet and fighting between
+themselves.
+
+How to start?
+--- 
+
+Come to place where you saved project and write in 
+terminal next commands 
+
+Download js dependencies `syarn install` and start 
+frontend `yarn start`
+
+If you want to start backend in terminal line use this command
+`./gradlew bootRun`
+or you can use java tools example 
+
+```shell script
+java -jar ~/projectDir/Battleship/build/libs/Battleship-1.0-SNAPSHOT.jar
+```
 
 Tree struct progect
 ---
 
-````
+```
 ├── src
 │   ├── main
 │   │   ├── java
@@ -47,4 +66,4 @@ Tree struct progect
 ├── webpack
 ├── webpack.config.js
 └── yarn.lock
-````
+```
