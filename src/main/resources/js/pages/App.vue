@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import BattleField from "../Components/BattleField.vue";
+    import BattleField from "../pages/BattleField.vue";
 
     export default {
         name: "App",

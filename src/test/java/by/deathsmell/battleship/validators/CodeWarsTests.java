@@ -1,4 +1,4 @@
-package by.deathsmell.battleship.Validators;
+package by.deathsmell.battleship.validators;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,0 +1,15 @@
+server:
+  port: ${application.server.port:8080}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/battleship
+    username: ${db_username:deathesmell}
+    password: ${db_password:123}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create

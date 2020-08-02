@@ -1,6 +1,6 @@
 package by.deathsmell.battleship.controller;
 
-import by.deathsmell.battleship.Validators.BattleFieldValidator;
+import by.deathsmell.battleship.validators.BattleFieldValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
