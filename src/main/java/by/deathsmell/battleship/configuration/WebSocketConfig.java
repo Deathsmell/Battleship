@@ -18,6 +18,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/gs-web-socket").withSockJS();
+        registry.addEndpoint("/room-сhat").withSockJS();
     }
 }

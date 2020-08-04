@@ -1,12 +1,12 @@
 import SockJS from 'sockjs-client'
-import { Stomp } from '@stomp/stompjs'
+import {Stomp} from '@stomp/stompjs'
 
 
 let stompClient = null
 const handlers = []
 
 export function connect() {
-    const socket = new SockJS('/gs-web-socket')
+    const socket = new SockJS('/room-сhat')
     stompClient = Stomp.over(socket)
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame)

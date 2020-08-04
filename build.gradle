@@ -20,11 +20,13 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
 }
 
-
+/*
+  Chek env system and if this chose "prod" start download node and yarn and build main.js file
+*/
 def isProd = System.getenv("spring.profiles.active")
 isProd = isProd != null ? isProd : "dev"
 if (isProd.equals("prod")) {
-    task buildFront(type: YarnTask){
+    task buildFront(type: YarnTask) {
         args = ['build']
     }
     yarn_install.dependsOn(yarn_cache_clean)

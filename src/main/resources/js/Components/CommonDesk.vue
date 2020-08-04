@@ -1,12 +1,15 @@
 <template>
   <v-container fluid>
-    <!-- TODO: crate common table component -->
     <table>
       <tr>
-        <th v-for="y in fields.length + 1">{{ y - 1 }}</th>
+        <th
+            v-for="y in fields.length + 1"
+        >
+          {{ y - 1 }}
+        </th>
       </tr>
       <tr
-          v-for="i in fields.length "
+          v-for="i in fields.length"
       >
         <td class="coordinate">{{ i }}</td>
         <td
@@ -14,21 +17,27 @@
             v-bind:class="{'field-void': whatColor(i,f), 'field-ship': !whatColor(i,f) }"
             v-bind:id="i+'-'+f"
             @click="isShip(i,f)"
-        >{{ fields[i - 1][f - 1] }}
+        >
+          {{ fields[i - 1][f - 1] }}
         </td>
       </tr>
     </table>
-    <!-- TODO: make snackbar common app object-->
-    <v-snackbar
-        v-model="snackbar"
-        bottom="bottom"
-        :color="color"
-        multi-line
-        timeout="6000"
-        top
+    <div
+        class="mt-3"
     >
-      {{ text }}
-    </v-snackbar>
+      <v-btn
+          v-if="buttons"
+          @click="clearField()"
+      >
+        Очистить поле
+      </v-btn>
+      <v-btn
+          v-if="buttons"
+          @click="validateField()"
+      >
+        Проверить
+      </v-btn>
+    </div>
   </v-container>
 </template>
 
@@ -37,36 +46,50 @@
 import {API, emptyField} from "../util/common";
 
 export default {
-  name: "OpponentDesk",
+  name: "CommonDesk",
+
+  props: {
+    clickByField: {
+      type: Function,
+      default: function (){
+      },
+      required: true,
+    },
+
+    fieldColor: {
+      type: Function,
+      default: function (array,index){
+        return this.fields[array - 1][index - 1] === 0
+      },
+      required: true,
+    },
+
+    checkButtons:{
+      type: Boolean,
+      default: function (){
+        return false
+      },
+      required: false,
+    }
+
+  },
+
   data() {
     return {
       fields: emptyField,
-
-      // TODO: replace in snackbar component
-      snackbar: false,
-      text: 'Error',
-      color: 'error',
     }
   },
+
   methods: {
-    getField() {
-      this.$http.get(API + 'field').then(res => {
-        res.body.forEach((array, index) => {
-          this.fields.splice(index, 1, array)
-        })
-      })
-    },
-    /* TODO: Need to make chose behavior based table type */
     whatColor(array, index) {
-      return this.fields[array - 1][index - 1] === 0
+      return this.fieldColor(array,index)
     },
-    /* TODO: I think this function can to make replaceable */
+
     isShip(array, index) {
-      let temp = this.fields[array - 1][index - 1]
-      temp = temp === 0 ? 1 : 0
-      this.fields[array - 1].splice(index - 1, 1, temp)
+      this.clickByField(array,index)
     },
-    /* TODO: Make disabled */
+
+
     clearField() {
       let array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       this.fields.forEach(value => {
@@ -76,7 +99,6 @@ export default {
         })
       })
     },
-    /* TODO: Make disabled*/
     validateField() {
       this.$http.post(API + 'validationField', this.fields)
           .then(response => {
@@ -97,6 +119,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 table, th, td
   border: 1px solid black
 

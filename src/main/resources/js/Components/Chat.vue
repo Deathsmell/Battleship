@@ -3,9 +3,7 @@
       class="grey lighten-3"
       fluid
   >
-    <v-col
-        cols="3"
-    >
+    <!-- TODO: Add resize chat window -->
         <v-row
             class=""
             no-gutters
@@ -14,6 +12,7 @@
               class="grey lighten-4"
               cols="4"
           >
+            <!-- TODO: Choosing or add user with who i want to send message -->
             <v-btn-toggle borderless>
               <v-btn depressed icon>
                 <v-icon>mdi-account-plus-outline</v-icon>
@@ -45,6 +44,7 @@
                 id="chat-window"
                 ref="chatWindow"
             >
+              <!--TODO rebuild justify env. When receive new message chek username and chose side left or right -->
               <v-row
                   no-gutters
                   v-for="(message,index) in messages"
@@ -79,8 +79,6 @@
             />
           </v-col>
         </v-row>
-    </v-col>
-
   </v-container>
 </template>
 
@@ -95,7 +93,6 @@ export default {
     return {
       messages: [],
       message: '',
-
     }
   },
 
@@ -112,6 +109,7 @@ export default {
   },
 
   methods: {
+    // FIXME: Rename function!!
     sendMessage(message) {
       sendMessage(message)
       this.message = ''

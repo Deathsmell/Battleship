@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <battle-field/>
     <chat/>
   </v-app>
 </template>
