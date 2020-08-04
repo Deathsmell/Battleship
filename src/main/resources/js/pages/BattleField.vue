@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import opponent from "../Components/OpponentDesk.vue"
-import yourDesk from "../Components/YouDesk.vue"
+import opponent from "../components/EnemyDesk.vue"
+import yourDesk from "../components/YourDesk.vue"
 
 export default {
   name: "BattleField",

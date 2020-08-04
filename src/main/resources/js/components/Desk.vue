@@ -14,81 +14,107 @@
         <td class="coordinate">{{ i }}</td>
         <td
             v-for="f in fields[i - 1].length"
-            v-bind:class="{'field-void': whatColor(i,f), 'field-ship': !whatColor(i,f) }"
-            v-bind:id="i+'-'+f"
+            :class="'field' + ' ' + whatColor(i,f)"
+            :id="i+'-'+f"
             @click="isShip(i,f)"
         >
           {{ fields[i - 1][f - 1] }}
         </td>
       </tr>
     </table>
-    <div
-        class="mt-3"
+    <v-container
+        v-if="checkButton"
     >
       <v-btn
-          v-if="buttons"
           @click="clearField()"
       >
         Очистить поле
       </v-btn>
       <v-btn
-          v-if="buttons"
           @click="validateField()"
       >
         Проверить
       </v-btn>
-    </div>
+    </v-container>
+
+    <!-- TODO: make snackbar common app object -->
+    <v-snackbar
+        v-model="snackbar"
+        bottom="bottom"
+        :color="color"
+        multi-line
+        timeout="6000"
+        top
+    >
+      {{ text }}
+    </v-snackbar>
   </v-container>
 </template>
 
 <script>
 
-import {API, emptyField} from "../util/common";
+
+import {API} from "../util/common";
 
 export default {
   name: "CommonDesk",
 
   props: {
+
+    desk: {
+      type: Array,
+      required: true,
+    },
+
     clickByField: {
       type: Function,
-      default: function (){
-      },
-      required: true,
     },
 
-    fieldColor: {
-      type: Function,
-      default: function (array,index){
-        return this.fields[array - 1][index - 1] === 0
-      },
-      required: true,
-    },
-
-    checkButtons:{
+    checkButton: {
       type: Boolean,
-      default: function (){
+      default() {
         return false
       },
-      required: false,
     }
 
   },
 
   data() {
     return {
-      fields: emptyField,
+      fields: this.desk,
+
+      // TODO: replace in snackbar component
+      snackbar: false,
+      text: 'Error',
+      color: 'error',
     }
   },
 
   methods: {
     whatColor(array, index) {
-      return this.fieldColor(array,index)
+      const field = this.fields[array - 1][index - 1];
+
+      switch (field) {
+        case 0:
+          return 'void'
+        case 1:
+          return 'ship'
+        case 2:
+          return 'enemy'
+      }
+
+      // if (field === 0) {
+      // } else if (field === 1) {
+      //   return 'ship'
+      // } else if (field === 2) {
+      //   return 'enemy'
+      // }
+
     },
 
     isShip(array, index) {
-      this.clickByField(array,index)
+      this.$emit('click-by-field', array, index)
     },
-
 
     clearField() {
       let array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -99,6 +125,7 @@ export default {
         })
       })
     },
+
     validateField() {
       this.$http.post(API + 'validationField', this.fields)
           .then(response => {
@@ -113,7 +140,8 @@ export default {
             this.text = error.status
             this.color = 'error'
           })
-    }
+    },
+
   }
 }
 </script>
@@ -131,14 +159,18 @@ table, th, td
   .coordinate
     font-weight: bold
 
+  .field
+    font: 0 Arial
 
-  .field-void
+  .void
     background: #1565C0
-    font: 0 Arial
 
 
-  .field-ship
+  .ship
     background: #37474F
-    font: 0 Arial
+
+
+  .enemy
+    background: red
 
 </style>
