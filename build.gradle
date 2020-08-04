@@ -13,18 +13,24 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtime('org.springframework.boot:spring-boot-devtools')
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
 }
 
-task buildFront(type: YarnTask){
-    args = ['build']
+
+def isProd = System.getenv("spring.profiles.active")
+isProd = isProd != null ? isProd : "dev"
+if (isProd.equals("prod")) {
+    task buildFront(type: YarnTask){
+        args = ['build']
+    }
+    yarn_install.dependsOn(yarn_cache_clean)
+    buildFront.dependsOn(yarn_install)
+    processResources.dependsOn(buildFront)
 }
-yarn_install.dependsOn(yarn_cache_clean)
-buildFront.dependsOn(yarn_install)
-processResources.dependsOn(buildFront)
 
 node {
     download = true

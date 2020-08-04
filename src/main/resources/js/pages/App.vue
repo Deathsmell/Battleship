@@ -1,19 +1,23 @@
 <template>
-    <v-app>
-        <BattleField></BattleField>
-    </v-app>
+  <v-app>
+    <chat/>
+  </v-app>
 </template>
 
 <script>
-    import BattleField from "../pages/BattleField.vue";
+import BattleField from "../pages/BattleField.vue";
+import YouDesk from "../Components/YouDesk.vue";
+import Chat from "../Components/Chat.vue";
 
-    export default {
-        name: "App",
-        components: {
-            BattleField,
-        },
-        data: () => ({}),
-    }
+export default {
+  name: "App",
+  components: {
+    BattleField,
+    YouDesk,
+    Chat,
+  },
+  data: () => ({}),
+}
 </script>
 
 <style scoped>

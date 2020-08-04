@@ -5,7 +5,7 @@
                 <your-desk></your-desk>
             </div>
             <div class="d-flex ma-6">
-                <opponent></opponent>
+              <opponent></opponent>
             </div>
         </v-row>
     </div>

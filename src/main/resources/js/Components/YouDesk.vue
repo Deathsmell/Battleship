@@ -2,7 +2,7 @@
     <div class="ma-5">
         <table>
             <tr>
-                <th v-for=" y in fields.length + 1">{{y - 1}}</th>
+                <th v-for="y in fields.length + 1">{{y - 1}}</th>
             </tr>
             <tr
                     v-for="i in fields.length "
