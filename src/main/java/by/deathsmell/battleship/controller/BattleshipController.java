@@ -3,6 +3,7 @@ package by.deathsmell.battleship.controller;
 import by.deathsmell.battleship.validators.BattleFieldValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +20,10 @@ public class BattleshipController {
         return valid ? ResponseEntity.ok(HttpStatus.OK) : ResponseEntity.badRequest().build();
     }
 
-
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
-    public String greeting (String message){
-        return message;
+    @MessageMapping("/room.{roomId}")
+    @SendTo("/topic/room.{roomId}")
+    public String checkField(@DestinationVariable String roomId) {
+        return null;
     }
 
 }

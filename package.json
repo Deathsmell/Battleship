@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js"
   },
   "repository": "git@github.com:/Deathsmell/Battleship.git",
@@ -23,6 +23,7 @@
     "css-loader": "^3.6.0",
     "deepmerge": "^4.2.2",
     "fibers": "^5.0.0",
+    "open-browser-webpack-plugin": "^0.0.5",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.2",
     "vue-loader": "^15.9.3",

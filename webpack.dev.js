@@ -12,6 +12,6 @@ module.exports = merge(common, {
             'localhost:8080'
         ],
         stats: 'errors-only',
-        clientLogLevel: 'error'
+        clientLogLevel: 'error',
     },
 });

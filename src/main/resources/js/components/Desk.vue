@@ -22,20 +22,7 @@
         </td>
       </tr>
     </table>
-    <v-container
-        v-if="checkButton"
-    >
-      <v-btn
-          @click="clearField()"
-      >
-        Очистить поле
-      </v-btn>
-      <v-btn
-          @click="validateField()"
-      >
-        Проверить
-      </v-btn>
-    </v-container>
+
 
     <!-- TODO: make snackbar common app object -->
     <v-snackbar
@@ -54,8 +41,6 @@
 <script>
 
 
-import {API} from "../util/common";
-
 export default {
   name: "CommonDesk",
 
@@ -68,14 +53,8 @@ export default {
 
     clickByField: {
       type: Function,
+      required: false,
     },
-
-    checkButton: {
-      type: Boolean,
-      default() {
-        return false
-      },
-    }
 
   },
 
@@ -114,32 +93,6 @@ export default {
 
     isShip(array, index) {
       this.$emit('click-by-field', array, index)
-    },
-
-    clearField() {
-      let array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      this.fields.forEach(value => {
-        value.splice(0, value.length)
-        array.forEach(zero => {
-          value.push(zero)
-        })
-      })
-    },
-
-    validateField() {
-      this.$http.post(API + 'validationField', this.fields)
-          .then(response => {
-            this.snackbar = true;
-            this.text = response.status + ' Success validation'
-            this.color = 'alert'
-            // console.log(snackbar + ' ' + response.status)
-          })
-          .catch(error => {
-            console.log(error);
-            this.snackbar = true;
-            this.text = error.status
-            this.color = 'error'
-          })
     },
 
   }

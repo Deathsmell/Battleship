@@ -48,12 +48,12 @@
               <v-row
                   no-gutters
                   v-for="(message,index) in messages"
-                  :justify="index % 2 === 1 ? 'start' : 'end'"
+                  :justify="message.sender !== name ? 'start' : 'end'"
               >
                 <v-chip
                     class="ma-1"
                 >
-                  {{ message }}
+                  {{ message.content }}
                 </v-chip>
               </v-row>
             </v-sheet>
@@ -67,7 +67,7 @@
           <v-col
           >
             <v-textarea
-                v-model="message"
+                v-model="message.content"
                 auto-grow
                 filled
                 single-line
@@ -75,15 +75,23 @@
                 prepend-inner-icon="mdi-comment"
                 background-color="white"
                 placeholder="Text here..."
-                @keyup.enter="sendMessage(message)"
+                @keyup.alt.enter="sendMessage(message)"
             />
           </v-col>
+
         </v-row>
+    <v-textarea
+        v-model="name"
+        rows="1"
+        single-line
+        :disabled="disable"
+        @keyup.ctrl.enter="connects(name)"
+    />
   </v-container>
 </template>
 
 <script>
-import {addHandler, sendMessage} from "../util/ws";
+import {addHandler, connect, sendMessage} from "../util/ws";
 import {scrollToBottom} from "../util/scroll";
 
 export default {
@@ -92,7 +100,15 @@ export default {
   data() {
     return {
       messages: [],
-      message: '',
+      message: {
+        sender: '',
+        content: '',
+        type: 'CHAT',
+      },
+
+
+      name:'',
+      disable:false,
     }
   },
 
@@ -109,10 +125,17 @@ export default {
   },
 
   methods: {
+    connects(sender) {
+      this.disable = true
+      connect(sender)
+    },
+
     // FIXME: Rename function!!
     sendMessage(message) {
+      message.sender = this.name
+      console.log(message);
       sendMessage(message)
-      this.message = ''
+      this.message.content = ''
     },
 
   }

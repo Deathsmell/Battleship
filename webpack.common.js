@@ -1,5 +1,7 @@
-const path = require('path');
+const path = require('path')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const OpenBrowserPlugin = require('open-browser-webpack-plugin')
+
 
 module.exports = {
     entry: path.join(__dirname, 'src', 'main', 'resources', 'js', 'index.js'),
@@ -29,7 +31,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.s(c|a)ss$/,
+                test: /\.s([ca])ss$/,
                 use: [
                     'vue-style-loader',
                     'css-loader',
@@ -50,7 +52,8 @@ module.exports = {
         ]
     },
     plugins: [
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new OpenBrowserPlugin({})
     ],
     resolve: {
         modules: [

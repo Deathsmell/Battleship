@@ -5,14 +5,19 @@ import {Stomp} from '@stomp/stompjs'
 let stompClient = null
 const handlers = []
 
-export function connect() {
-    const socket = new SockJS('/room-сhat')
+export function connect(sender) {
+    const socket = new SockJS('/room-chat')
     stompClient = Stomp.over(socket)
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame)
-        stompClient.subscribe('/topic/greetings', message => {
-            handlers.forEach(handler => handler(JSON.parse(message.body)))
-        })
+        let onMessageReceive = payload => {
+            let message = JSON.parse(payload.body);
+            if (message.type === 'CHAT') {
+                handlers.forEach(handler => handler(message))
+            }
+        };
+        stompClient.subscribe('/topic/public', onMessageReceive)
+        stompClient.send('/app/chat.addUser', {}, JSON.stringify({sender: sender, type: 'JOIN'}))
     })
 }
 
@@ -28,5 +33,20 @@ export function disconnect() {
 }
 
 export function sendMessage(message) {
-    stompClient.send("/app/hello", {}, JSON.stringify(message))
+    if ('' === message.sender || null === message.sender) {
+        console.error('Dont have sender header. Sender equal ' + message.sender)
+    }
+    if (message.type !== 'CHAT') {
+        message.type = 'CHAT'
+        console.error('Incorrect message type ')
+    }
+    if (message.content !== '') {
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message))
+    } else {
+        console.log('Message empty!')
+    }
+}
+
+export function addUser() {
+    stompClient.send("/app/chat.addUser", {}, JSON.stringify({sender: "John"}))
 }
