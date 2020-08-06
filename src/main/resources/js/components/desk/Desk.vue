@@ -22,19 +22,6 @@
         </td>
       </tr>
     </table>
-
-
-    <!-- TODO: make snackbar common app object -->
-    <v-snackbar
-        v-model="snackbar"
-        bottom="bottom"
-        :color="color"
-        multi-line
-        timeout="6000"
-        top
-    >
-      {{ text }}
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -45,7 +32,6 @@ export default {
   name: "CommonDesk",
 
   props: {
-
     desk: {
       type: Array,
       required: true,
@@ -55,17 +41,11 @@ export default {
       type: Function,
       required: false,
     },
-
   },
 
   data() {
     return {
       fields: this.desk,
-
-      // TODO: replace in snackbar component
-      snackbar: false,
-      text: 'Error',
-      color: 'error',
     }
   },
 
@@ -81,14 +61,6 @@ export default {
         case 2:
           return 'enemy'
       }
-
-      // if (field === 0) {
-      // } else if (field === 1) {
-      //   return 'ship'
-      // } else if (field === 2) {
-      //   return 'enemy'
-      // }
-
     },
 
     isShip(array, index) {

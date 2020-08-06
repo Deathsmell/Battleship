@@ -28,6 +28,7 @@
             <v-sheet
                 class="white"
             />
+
           </v-col>
         </v-row>
 
@@ -75,7 +76,7 @@
                 prepend-inner-icon="mdi-comment"
                 background-color="white"
                 placeholder="Text here..."
-                @keyup.alt.enter="sendMessage(message)"
+                @keyup.alt.enter="sendMessage(message,roomId)"
             />
           </v-col>
 
@@ -85,14 +86,15 @@
         rows="1"
         single-line
         :disabled="disable"
-        @keyup.ctrl.enter="connects(name)"
+        @keyup.ctrl.enter=""
     />
   </v-container>
 </template>
 
 <script>
-import {addHandler, connect, sendMessage} from "../util/ws";
-import {scrollToBottom} from "../util/scroll";
+import {addHandler, connect, sendMessage} from "../../util/ws";
+import {scrollToBottom} from "../../util/scroll";
+import {API} from "../../util/common";
 
 export default {
   name: "Chat",
@@ -106,7 +108,7 @@ export default {
         type: 'CHAT',
       },
 
-
+      roomId:'',
       name:'',
       disable:false,
     }
@@ -122,19 +124,27 @@ export default {
     addHandler(data => {
       this.messages.push(data)
     })
+    this.generateRoomId()
   },
 
   methods: {
-    connects(sender) {
+
+    generateRoomId(){
+      this.$http.get(API + '/room/generateRoomId').then(res => {
+        this.roomId = res.data
+      })
+    },
+
+    connects(sender,room) {
       this.disable = true
-      connect(sender)
+      connect(sender, room)
     },
 
     // FIXME: Rename function!!
-    sendMessage(message) {
+    sendMessage(message,roomId) {
       message.sender = this.name
       console.log(message);
-      sendMessage(message)
+      sendMessage(message,roomId)
       this.message.content = ''
     },
 

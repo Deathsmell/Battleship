@@ -17,22 +17,40 @@
         Проверить
       </v-btn>
     </v-container>
+    <!-- TODO: make snackbar common app object -->
+    <v-snackbar
+        v-model="snackbar"
+        bottom="bottom"
+        :color="color"
+        multi-line
+        timeout="6000"
+        top
+    >
+      {{ text }}
+    </v-snackbar>
   </v-container>
 </template>
 
 <script>
 
-import {API, emptyDesk} from "../util/common";
+import {API, emptyDesk} from "../../util/common";
 import Desk from "./Desk.vue";
+// import Snackbar from "../alerts/Snackbar.vue";
 
 export default {
   name: "BattleField",
   components: {
     Desk,
+    // Snackbar
   },
   data() {
     return {
       fields: emptyDesk(),
+
+      // TODO: replace in snackbar component
+      snackbar: false,
+      text: 'Error',
+      color: 'error',
     }
   },
 
@@ -62,7 +80,7 @@ export default {
             // console.log(snackbar + ' ' + response.status)
           })
           .catch(error => {
-            console.log(error);
+            console.error(error);
             this.snackbar = true;
             this.text = error.status
             this.color = 'error'

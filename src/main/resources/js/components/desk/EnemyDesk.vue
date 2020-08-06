@@ -10,7 +10,7 @@
 <script>
 
 import Desk from "./Desk.vue";
-import {API, emptyDesk} from "../util/common";
+import {API, emptyDesk} from "../../util/common";
 
 export default {
   name: "OpponentDesk",
@@ -36,7 +36,7 @@ export default {
     // TODO: refactor the method so when after a request to the server, know if there is an enemy ship at this place
     isShip(array, index) {
       let temp = this.fields[array - 1][index - 1]
-      temp = temp === 0 ? 1 : 0
+      temp = temp === 0 ? 2 : 0
       this.fields[array - 1].splice(index - 1, 1, temp)
     },
   }

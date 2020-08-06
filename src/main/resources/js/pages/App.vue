@@ -1,22 +1,19 @@
 <template>
   <v-app>
-    <battle-field/>
-    <v-col cols="6">
-      <chat/>
-    </v-col>
+    <v-main>
+      <tool-bar/>
+      <router-view></router-view>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import BattleField from "../pages/BattleField.vue";
-import Chat from "../components/Chat.vue";
+
+import ToolBar from "../components/bar/ToolBar.vue";
 
 export default {
   name: "App",
-  components: {
-    BattleField,
-    Chat,
-  },
+  components: {ToolBar},
   data: () => ({}),
 }
 </script>

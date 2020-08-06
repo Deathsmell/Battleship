@@ -26,4 +26,8 @@ public class RoomController {
         return new ModelAndView("redirect:" + API + roomId);
     }
 
+    @GetMapping("/generateRoomId")
+    public UUID generateRoomId (){
+        return UUID.randomUUID();
+    }
 }

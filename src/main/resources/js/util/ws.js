@@ -5,7 +5,7 @@ import {Stomp} from '@stomp/stompjs'
 let stompClient = null
 const handlers = []
 
-export function connect(sender) {
+export function connect(sender,roomId) {
     const socket = new SockJS('/room-chat')
     stompClient = Stomp.over(socket)
     stompClient.connect({}, frame => {
@@ -16,7 +16,7 @@ export function connect(sender) {
                 handlers.forEach(handler => handler(message))
             }
         };
-        stompClient.subscribe('/topic/public', onMessageReceive)
+        stompClient.subscribe('/topic/room/'+roomId, onMessageReceive)
         stompClient.send('/app/chat.addUser', {}, JSON.stringify({sender: sender, type: 'JOIN'}))
     })
 }
@@ -32,7 +32,7 @@ export function disconnect() {
     console.log("Disconnected")
 }
 
-export function sendMessage(message) {
+export function sendMessage(message,roomId) {
     if ('' === message.sender || null === message.sender) {
         console.error('Dont have sender header. Sender equal ' + message.sender)
     }
@@ -41,7 +41,7 @@ export function sendMessage(message) {
         console.error('Incorrect message type ')
     }
     if (message.content !== '') {
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message))
+        stompClient.send("/app/room/" + roomId +"/chat.sendMessage", {}, JSON.stringify(message))
     } else {
         console.log('Message empty!')
     }
