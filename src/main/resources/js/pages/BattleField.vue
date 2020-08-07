@@ -9,8 +9,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <router-view/>
-      <stat-window/>
+      <chat/>
     </v-row>
   </v-container>
 </template>
@@ -19,10 +18,12 @@
 import opponent from "../components/desk/EnemyDesk.vue"
 import yourDesk from "../components/desk/YourDesk.vue"
 import StatWindow from "../components/statistic/StatWindow.vue"
+import Chat from "../components/chat/Chat.vue";
 
 export default {
   name: "BattleField",
   components: {
+    Chat,
     opponent,
     yourDesk,
     StatWindow,

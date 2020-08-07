@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import BattleField from "../pages/BattleField.vue";
 import Chat from "../components/chat/Chat.vue";
-import StatWindow from "../components/statistic/StatWindow.vue";
+import Test from "../pages/Test.vue";
+import WelcomePage from "../pages/WelcomePage.vue";
 
 
 Vue.use(VueRouter)
@@ -10,21 +11,25 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        component: BattleField,
-        children: [
-            {
-                path: '*',
-                component: Chat
-            },
-            ]
+        component: WelcomePage
     },
-    {path: '/stat', name: 'stat', component: StatWindow},
+    {   path: '/room/:name/:id',
+        name:'room',
+        component: BattleField,
+    },
+
+
+    {
+        path: '/room',
+        component: BattleField,
+
+    },
+    {path: '/test', name: 'test', component: Test},
     {path: '/chat/:id', component: Chat},
-    {path: '/room/:id', component: BattleField},
     {path: '*', component: BattleField},
 ]
 
 export default new VueRouter({
     mode: 'history',
-    routes // сокращённая запись для `routes: routes`
+    routes
 })

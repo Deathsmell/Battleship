@@ -25,20 +25,23 @@ public class WebSocketChatEventListener {
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        log.info("Received a new web socket connection. Session id: {} ", accessor.getSessionId());
+        System.out.println(accessor.toString());
+        log.info("Received a new web socket connection. Session id: {}", accessor.getSessionId());
     }
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = null;
+        String roomID = null;
         try {
             username = (String) headerAccessor.getSessionAttributes().get("sender");
+            roomID = (String) headerAccessor.getSessionAttributes().get("roomId");
         } catch (NullPointerException e) {
             log.error("Unsupported user");
         }
 
-        log.info("Disconnect {} ", username);
+        log.info("Disconnect user :{} in room {} ", username, roomID);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setType(ChatMessage.MessageType.LEAVE);
