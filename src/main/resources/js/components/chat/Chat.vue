@@ -109,6 +109,7 @@
 import {addHandler, sendMessageInChat, unsubscribe} from "../../util/ws"
 import {scrollToBottom} from "../../util/scroll"
 import {createNamespacedHelpers} from 'vuex'
+import ChatMessage from "../../entity/ChatMessage";
 
 const {mapActions,mapGetters} = createNamespacedHelpers('subscribes')
 

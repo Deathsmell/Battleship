@@ -10,7 +10,8 @@ const subscribers = []
 export function connect(sender) {
     const socket = new SockJS('/room-chat')
     stompClient = Stomp.over(socket)
-    stompClient.connect({}, frame => {
+    stompClient.connect({sender}, frame => {
+        console.log(frame)
         registrationNewUser(sender)
         subscribeGlobalChat()
     })
@@ -24,9 +25,9 @@ function onMessageReceive(resp) {
         handlers.forEach(handler => handler(message))
     } else if (message.type === 'JOIN') {
         console.log("JOIN METHOD!!!")
-        console.log(resp);
+        console.log(resp.headers.subscription);
         // const subscribe = JSON.parse(resp.headers.subscription)
-        subscribers.push({id: message.roomId, resp});
+        subscribers.push({id: message.roomId, subscribe: resp.headers.subscription});
     }
 
 }
@@ -65,15 +66,15 @@ export function sendMessageInChat(message, roomId) {
 }
 
 export function registrationNewUser(sender) {
-    stompClient.send("/app/chat.addUser", {}, JSON.stringify({id: sender, sender, type: 'JOIN'}))
+    stompClient.send("/app/chat.addUser", {}, JSON.stringify({id: 0, sender, type: 'JOIN'}))
 }
 
 export function joinToRoom(room, sender) {
     console.log("Join to room")
     stompClient.subscribe('/topic/room/' + room,onMessageReceive)
     stompClient.send('/app/room/' + room + '/join', {}, JSON.stringify({
-        room: {room},
-        sender,
+        sender: sender,
+        connect:"",
         type: 'JOIN'
     }))
 }
@@ -87,7 +88,7 @@ export function unsubscribe(roomId) {
     console.log('roomId = ' + roomId)
     let index = subscribers.findIndex(value => value.id = roomId);
     if (index > -1) {
-        subscribers[index].unsubscribe()
+        stompClient.unsubscribe(subscribers[index].subscribe)
         subscribers.splice(index, 1)
     } else {
         console.error("Not found subscription. Room id: " + roomId)

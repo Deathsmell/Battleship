@@ -101,7 +101,8 @@ export default {
       console.log('MOVING TO ROOM LIST PAGE!')
     },
     createRoom(sender) {
-      this.$http.post(API + 'room/create').then(res => {
+      console.log("CREATING ROOM")
+      this.$http.get(API + 'room/create').then(res => {
         const roomId = res.data.room;
         console.log(roomId)
         joinToRoom(roomId, sender)

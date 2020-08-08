@@ -14,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static by.deathsmell.battleship.domain.Room.*;
@@ -32,22 +33,48 @@ public class RoomController {
         this.template = template;
     }
 
-    @PostMapping("/create")
+    @GetMapping("/create")
     public Room createRoom() {
         UUID roomID = UUID.randomUUID();
         Room newRoom = new Room();
         newRoom.setRoom(roomID);
         newRoom.setState(State.CREATE);
         roomRepo.save(newRoom);
-        log.info("Create new room. Status : {}, id : {}", newRoom.getState(), roomID);
+        log.info("Create new room. Room {}", newRoom);
         return newRoom;
+    }
+
+    @GetMapping("/list")
+    public List<Room> getAllWaitRooms() {
+        return roomRepo.findAllByPlayer1NotNullOrPlayer2NotNull();
+    }
+
+    @GetMapping("/allRooms")
+    public List<Room> getAllRooms() {
+        return roomRepo.findAll();
+    }
+
+    @MessageMapping("/chat.addUser")
+    @SendTo("/topic/public")
+    public ChatMessage addUser(@Payload ChatMessage chatMessage,
+                               SimpMessageHeaderAccessor headerAccessor) {
+        // Add username in web socket session
+        String sender = chatMessage.getSender();
+        if (null != sender) {
+            headerAccessor.getSessionAttributes().put("sender", sender);
+            log.info("Registration new user: {}.", sender);
+        } else {
+            log.error("Username empty");
+        }
+        return chatMessage;
     }
 
     @MessageMapping("/room/{roomId}/join")
     @SendTo("/topic/room/{roomId}")
     // FIXME: dont send response
     public ChatMessage joinToRoom(@Payload ChatMessage message,
-                                  @DestinationVariable UUID roomId)
+                                  @DestinationVariable UUID roomId,
+                                  SimpMessageHeaderAccessor accessor)
             throws IncorrectStatusOfTheCreatedRoomException,
             IncorrectStatusMessageExeption,
             EmptySenderNameSpaceException {
@@ -61,8 +88,10 @@ public class RoomController {
                     State state = roomFromDb.getState();
                     if (state == State.CREATE) {
                         joinFirstPlayer(roomId, sender, roomFromDb, state);
+                        accessor.getSessionAttributes().put("roomId",roomId);
                     } else if (state == State.WAIT) {
                         joinSecondPlayer(roomId, sender, roomFromDb, state);
+                        accessor.getSessionAttributes().put("roomId",roomId);
                     } else {
                         return reportRoomFieldOrDestroyed();
                     }
@@ -80,10 +109,9 @@ public class RoomController {
     private ChatMessage successReport(ChatMessage message, UUID roomId, String sender) {
         log.info("User '{}' join in room. Room id: {}", sender, roomId);
         ChatMessage successMessage = new ChatMessage();
+        successMessage.setSender("Server");
         successMessage.setType(MessageType.JOIN);
         successMessage.setContent("Success join. Just enjoy");
-        successMessage.setSender("Server");
-        template.convertAndSend("/room/"+roomId+"/chat.sendMessage",successMessage);
         return successMessage;
     }
 
@@ -91,8 +119,8 @@ public class RoomController {
         log.debug("Room filed or destroyed");
         ChatMessage errorResponseMessage = new ChatMessage();
         errorResponseMessage.setSender("Server");
-        errorResponseMessage.setContent("Room filed or destroyed");
         errorResponseMessage.setType(MessageType.CHAT);
+        errorResponseMessage.setContent("Room filed or destroyed");
         return errorResponseMessage;
     }
 
@@ -101,6 +129,7 @@ public class RoomController {
             roomFromDb.setPlayer1(sender);
             roomFromDb.setState(State.WAIT);
             log.info("Add host players in new room. Player name: {}, room id: {}", sender, roomId);
+            roomRepo.save(roomFromDb);
         } else {
             log.error("Incorrect status of the create room." +
                             " One or two place in room taken. Status: {}, room id: {}",
@@ -113,6 +142,7 @@ public class RoomController {
         if (!sender.equals(roomFromDb.getPlayer1()) && null == roomFromDb.getPlayer2()) {
             roomFromDb.setPlayer2(sender);
             roomFromDb.setState(State.FILED);
+            roomRepo.save(roomFromDb);
         } else {
             log.error("Incorrect status of the create room." +
                             " Sender try to rejoin second time or room filed. Status: {}, room id: {}.",
@@ -122,18 +152,4 @@ public class RoomController {
     }
 
 
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
-                               SimpMessageHeaderAccessor headerAccessor) {
-        // Add username in web socket session
-        String sender = chatMessage.getSender();
-        if (null != sender) {
-            headerAccessor.getSessionAttributes().put("sender", sender);
-            log.info("Registration new user: {}.", sender);
-        } else {
-            log.error("Username empty");
-        }
-        return chatMessage;
-    }
 }
