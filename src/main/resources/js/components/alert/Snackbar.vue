@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      // FIXME: Make this component universal and flexible by app
+      // TODO: Make this component universal and flexible by app
     }
   }
 }

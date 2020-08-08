@@ -21,9 +21,8 @@ public class ChatMessage {
     private MessageType type;
     private String content;
     private String sender;
-
-//    @OneToOne(fetch = FetchType.LAZY)
 //    private Room room;
+
 
     public enum MessageType {
         CHAT, JOIN, LEAVE, DISCONNECT

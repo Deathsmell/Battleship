@@ -10,5 +10,5 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
 
     Room findByRoom(UUID roomId);
 
-    List<Room> findAllByPlayer1NotNullOrPlayer2NotNull();
+    List<Room> findAllByHostNotNullOrOpponentNotNull();
 }

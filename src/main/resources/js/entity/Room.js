@@ -1,14 +1,16 @@
 export default class Room {
     constructor(room,
                 id,
-                player1,
-                player2,
-                state) {
-        this.room = room === undefined ? '' : room
-        this.id = id === undefined ? '' : id
-        this.player1 = player1 === undefined ? '' : player1
-        this.player2 = player2 === undefined ? '' : player2
-        this.state = state === undefined ? '' : state
+                host,
+                opponent,
+                roomStatus,
+                time) {
+        this.room = room === null ? '' : room
+        this.id = id === null ? '' : id
+        this.host = host === null ? '< none >' : host
+        this.opponent = opponent === null ? '< none >' : opponent
+        this.roomStatus = roomStatus === undefined ? '' : roomStatus
+        this.time = time === null ? '' : time
     }
 
 
@@ -28,37 +30,46 @@ export default class Room {
         this._id = value;
     }
 
-    get player1() {
-        return this._player1;
+    get host() {
+        return this._host;
     }
 
-    set player1(value) {
-        this._player1 = value;
+    set host(value) {
+        this._host = value;
     }
 
-    get player2() {
-        return this._player2;
+    get opponent() {
+        return this._opponent;
     }
 
-    set player2(value) {
-        this._player2 = value;
+    set opponent(value) {
+        this._opponent = value;
     }
 
-    get state() {
-        return this._state;
+    get roomStatus() {
+        return this._roomStatus;
     }
 
-    set state(value) {
-        this._state = value;
+    set roomStatus(value) {
+        this._roomStatus = value;
+    }
+
+    get time() {
+        return this._time;
+    }
+
+    set time(value) {
+        this._time = value;
     }
 
     toJSON() {
         return {
             room: this._room,
             id: this._id,
-            player1: this._player1,
-            player2: this._player2,
-            state: this._state,
+            host: this._host,
+            opponent: this._opponent,
+            roomStatus: this._roomStatus,
+            createTime: this._time
         }
     }
 }

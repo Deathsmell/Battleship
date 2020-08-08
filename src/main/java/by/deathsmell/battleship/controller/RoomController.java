@@ -14,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,10 +36,12 @@ public class RoomController {
 
     @GetMapping("/create")
     public Room createRoom() {
+        //FIXME: Relocate in service class
         UUID roomID = UUID.randomUUID();
         Room newRoom = new Room();
         newRoom.setRoom(roomID);
-        newRoom.setState(State.CREATE);
+        newRoom.setRoomStatus(RoomStatus.CREATE);
+        newRoom.setCreateTime(LocalDateTime.now());
         roomRepo.save(newRoom);
         log.info("Create new room. Room {}", newRoom);
         return newRoom;
@@ -46,7 +49,7 @@ public class RoomController {
 
     @GetMapping("/list")
     public List<Room> getAllWaitRooms() {
-        return roomRepo.findAllByPlayer1NotNullOrPlayer2NotNull();
+        return roomRepo.findAllByHostNotNullOrOpponentNotNull();
     }
 
     @GetMapping("/allRooms")
@@ -71,7 +74,6 @@ public class RoomController {
 
     @MessageMapping("/room/{roomId}/join")
     @SendTo("/topic/room/{roomId}")
-    // FIXME: dont send response
     public ChatMessage joinToRoom(@Payload ChatMessage message,
                                   @DestinationVariable UUID roomId,
                                   SimpMessageHeaderAccessor accessor)
@@ -85,12 +87,12 @@ public class RoomController {
                 if (null != roomId) {
                     Room roomFromDb = roomRepo.findByRoom(roomId);
                     log.debug("Find room in DB. Room: {}", roomFromDb);
-                    State state = roomFromDb.getState();
-                    if (state == State.CREATE) {
-                        joinFirstPlayer(roomId, sender, roomFromDb, state);
+                    RoomStatus roomStatus = roomFromDb.getRoomStatus();
+                    if (roomStatus == RoomStatus.CREATE) {
+                        joinFirstPlayer(roomId, sender, roomFromDb, roomStatus);
                         accessor.getSessionAttributes().put("roomId",roomId);
-                    } else if (state == State.WAIT) {
-                        joinSecondPlayer(roomId, sender, roomFromDb, state);
+                    } else if (roomStatus == RoomStatus.WAIT) {
+                        joinSecondPlayer(roomId, sender, roomFromDb, roomStatus);
                         accessor.getSessionAttributes().put("roomId",roomId);
                     } else {
                         return reportRoomFieldOrDestroyed();
@@ -106,6 +108,7 @@ public class RoomController {
 
     }
 
+    //FIXME: Relocate in service class
     private ChatMessage successReport(ChatMessage message, UUID roomId, String sender) {
         log.info("User '{}' join in room. Room id: {}", sender, roomId);
         ChatMessage successMessage = new ChatMessage();
@@ -114,7 +117,7 @@ public class RoomController {
         successMessage.setContent("Success join. Just enjoy");
         return successMessage;
     }
-
+    //FIXME: Relocate in service class
     private ChatMessage reportRoomFieldOrDestroyed() {
         log.debug("Room filed or destroyed");
         ChatMessage errorResponseMessage = new ChatMessage();
@@ -123,30 +126,30 @@ public class RoomController {
         errorResponseMessage.setContent("Room filed or destroyed");
         return errorResponseMessage;
     }
-
-    private void joinFirstPlayer(UUID roomId, String sender, Room roomFromDb, State state) throws IncorrectStatusOfTheCreatedRoomException {
-        if (null == roomFromDb.getPlayer1() && null == roomFromDb.getPlayer2()) {
-            roomFromDb.setPlayer1(sender);
-            roomFromDb.setState(State.WAIT);
+    //FIXME: Relocate in service class
+    private void joinFirstPlayer(UUID roomId, String sender, Room roomFromDb, RoomStatus roomStatus) throws IncorrectStatusOfTheCreatedRoomException {
+        if (null == roomFromDb.getHost() && null == roomFromDb.getOpponent()) {
+            roomFromDb.setHost(sender);
+            roomFromDb.setRoomStatus(RoomStatus.WAIT);
             log.info("Add host players in new room. Player name: {}, room id: {}", sender, roomId);
             roomRepo.save(roomFromDb);
         } else {
             log.error("Incorrect status of the create room." +
                             " One or two place in room taken. Status: {}, room id: {}",
-                    state, roomId);
+                    roomStatus, roomId);
             throw new IncorrectStatusOfTheCreatedRoomException();
         }
     }
-
-    private void joinSecondPlayer(UUID roomId, String sender, Room roomFromDb, State state) throws IncorrectStatusOfTheCreatedRoomException {
-        if (!sender.equals(roomFromDb.getPlayer1()) && null == roomFromDb.getPlayer2()) {
-            roomFromDb.setPlayer2(sender);
-            roomFromDb.setState(State.FILED);
+    //FIXME: Relocate in service class
+    private void joinSecondPlayer(UUID roomId, String sender, Room roomFromDb, RoomStatus roomStatus) throws IncorrectStatusOfTheCreatedRoomException {
+        if (!sender.equals(roomFromDb.getHost()) && null == roomFromDb.getOpponent()) {
+            roomFromDb.setOpponent(sender);
+            roomFromDb.setRoomStatus(RoomStatus.FILED);
             roomRepo.save(roomFromDb);
         } else {
             log.error("Incorrect status of the create room." +
                             " Sender try to rejoin second time or room filed. Status: {}, room id: {}.",
-                    state, roomId);
+                    roomStatus, roomId);
             throw new IncorrectStatusOfTheCreatedRoomException();
         }
     }

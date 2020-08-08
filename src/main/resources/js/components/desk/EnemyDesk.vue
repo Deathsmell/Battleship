@@ -24,15 +24,6 @@ export default {
   },
   methods: {
 
-    // TODO: Remove later
-    getField() {
-      this.$http.get(API + 'field').then(res => {
-        res.body.forEach((array, index) => {
-          this.fields.splice(index, 1, array)
-        })
-      })
-    },
-
     // TODO: refactor the method so when after a request to the server, know if there is an enemy ship at this place
     isShip(array, index) {
       let temp = this.fields[array - 1][index - 1]

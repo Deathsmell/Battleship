@@ -5,22 +5,19 @@ import by.deathsmell.battleship.dto.ChatMessage;
 import by.deathsmell.battleship.exception.IllegalRoomStateException;
 import by.deathsmell.battleship.exception.IllegalSenderAction;
 import by.deathsmell.battleship.repositories.RoomRepository;
-import com.sun.istack.Nullable;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.web.socket.messaging.*;
 
 import java.util.Map;
 import java.util.UUID;
 
-import static by.deathsmell.battleship.domain.Room.State.DESTROY;
-import static by.deathsmell.battleship.dto.ChatMessage.*;
+import static by.deathsmell.battleship.domain.Room.RoomStatus.DESTROY;
+import static by.deathsmell.battleship.dto.ChatMessage.MessageType;
 
 @Component
 @Slf4j
@@ -63,7 +60,7 @@ public class WebSocketChatEventListener {
             throw new RuntimeException();
         }
         String username = (String) sessionAttributes.get("sender");
-        String roomID = (String) sessionAttributes.get("roomId");
+        UUID roomID = (UUID) sessionAttributes.get("roomId");
         String sessionId = headerAccessor.getSessionId();
 
         if (roomID != null) {
@@ -96,34 +93,34 @@ public class WebSocketChatEventListener {
                         : username;
 
                 if (!username.isEmpty()) {
-                    boolean hasPlayer1 = username.equals(room.getPlayer1());
-                    boolean hasPlayer2 = username.equals(room.getPlayer2());
+                    boolean hasPlayer1 = username.equals(room.getHost());
+                    boolean hasPlayer2 = username.equals(room.getOpponent());
                     if (hasPlayer1 && hasPlayer2) {
                         log.error("Sender listed in two room slots. Illegal room state. Sender : {}, {}", username, roomId);
                         throw new IllegalRoomStateException();
                     }
                     if (hasPlayer1) {
-                        room.setPlayer1(null);
+                        room.setHost(null);
                         accessor.getSessionAttributes().remove("roomId");
                     } else {
                         if (hasPlayer2) {
-                            room.setPlayer2(null);
+                            room.setOpponent(null);
                             accessor.getSessionAttributes().remove("roomId");
                         } else {
                             log.error("Player not belongs that room. Sender : {} expect {} or {} , room id: {}",
                                     username,
-                                    room.getPlayer1(),
-                                    room.getPlayer2(),
+                                    room.getHost(),
+                                    room.getOpponent(),
                                     roomId);
                             throw new IllegalSenderAction();
                         }
                     }
-                    if (room.getPlayer1() == null && room.getPlayer2() == null && room.getState().equals(DESTROY)) {
+                    if (room.getHost() == null && room.getOpponent() == null && room.getRoomStatus().equals(DESTROY)) {
                         log.info("Room is empty. Deleting: {}", room);
                         roomRepo.delete(room);
                     } else {
                         log.debug("Room have give status DESTROY");
-                        room.setState(DESTROY);
+                        room.setRoomStatus(DESTROY);
                         createReport(username, MessageType.LEAVE, room.getRoom());
                     }
                 }

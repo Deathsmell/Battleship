@@ -2,8 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import BattleField from "../pages/BattleField.vue";
 import Chat from "../components/chat/Chat.vue";
-import Test from "../pages/Test.vue";
 import WelcomePage from "../pages/WelcomePage.vue";
+import RoomList from "../pages/RoomList.vue";
+import RoomCard from "../components/list/RoomCard.vue";
 
 
 Vue.use(VueRouter)
@@ -17,14 +18,14 @@ const routes = [
         name:'room',
         component: BattleField,
     },
-
-
     {
-        path: '/room',
-        component: BattleField,
-
+        path: '/list',
+        component: RoomList,
     },
-    {path: '/test', name: 'test', component: Test},
+    {
+        path: '/card',
+        component: RoomCard
+    },
     {path: '/chat/:id', component: Chat},
     {path: '*', component: BattleField},
 ]

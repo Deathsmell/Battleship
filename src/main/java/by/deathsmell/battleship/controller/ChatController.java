@@ -25,8 +25,8 @@ public class ChatController {
     @SendTo("/topic/room/{roomId}")
     public ChatMessage sendMessageInRoomChat(@Payload ChatMessage chatMessage,
                                              @DestinationVariable UUID roomId) {
-        log.info("Send message between users in {} room", roomId);
-        log.info("{}",chatMessage);
+        log.info("Send message between users in {} room. {}", roomId, chatMessage);
+
         return chatMessage;
     }
 

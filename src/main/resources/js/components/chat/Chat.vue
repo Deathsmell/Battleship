@@ -67,7 +67,8 @@
             id="chat-window"
             ref="chatWindow"
         >
-          <!--TODO rebuild justify env. When receive new message chek username and chose side left or right -->
+          <!--TODO rebuild justify env. When receive new message check username and chose side left or right -->
+          <!--FIXME: Sometimes message comes on does not needed side. Probably name does not set-->
           <v-row
               no-gutters
               v-for="message in messages"

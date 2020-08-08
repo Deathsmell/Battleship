@@ -97,8 +97,8 @@ export default {
       this.show = !this.show
     },
     moveToRoomList() {
-      // Empty
       console.log('MOVING TO ROOM LIST PAGE!')
+      this.$router.push({path: `/list`})
     },
     createRoom(sender) {
       console.log("CREATING ROOM")

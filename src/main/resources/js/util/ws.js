@@ -66,7 +66,10 @@ export function sendMessageInChat(message, roomId) {
 }
 
 export function registrationNewUser(sender) {
-    stompClient.send("/app/chat.addUser", {}, JSON.stringify({id: 0, sender, type: 'JOIN'}))
+    stompClient.send("/app/chat.addUser", {}, JSON.stringify({ sender, type: 'JOIN'}))
+
+    // TODO: remove this method and create storage action or equivalent
+    sessionStorage.setItem('username',sender)
 }
 
 export function joinToRoom(room, sender) {
@@ -77,13 +80,13 @@ export function joinToRoom(room, sender) {
         connect:"",
         type: 'JOIN'
     }))
+
 }
 
 export function subscribeGlobalChat() {
     stompClient.subscribe('/topic/public', onMessageReceive)
 }
 
-// FIXME: Dont work
 export function unsubscribe(roomId) {
     console.log('roomId = ' + roomId)
     let index = subscribers.findIndex(value => value.id = roomId);
