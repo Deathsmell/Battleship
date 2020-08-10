@@ -56,7 +56,7 @@
                                 label
                                 :color="chipColor"
                         >
-                            {{ time }}
+                            {{ createTime }}
                         </v-chip>
                     </v-row>
                     <v-row
@@ -95,6 +95,7 @@
 
 <script>
     import {joinToRoom} from "../../util/ws";
+    import {mapGetters} from "vuex"
 
     export default {
         name: "RoomCard",
@@ -115,7 +116,7 @@
                 type: String,
                 required: true,
             },
-            time: {
+            createTime: {
                 type: String,
                 required: true,
             },
@@ -136,24 +137,24 @@
             }
         },
 
-        computed: {
-
-            join: function () {
-                return this.roomStatus !== 'WAIT';
+        computed:{
+            join(){
+                return this.roomStatus !== "WAIT"
             }
         },
-
         data() {
-            return {}
+            return {
+            }
         },
 
         methods: {
 
+            ...mapGetters('user',['getName']),
+
             joinInRoom() {
                 joinToRoom(this.room, this.name)
 
-                //FIXME: remove sessionStorage and create storage getter
-                this.$router.push({path: `room/${sessionStorage.getItem('username')}/${this.room}`})
+                this.$router.push({path: `room/${this.getName()}/${this.room}`})
             },
 
             statusColor() {
@@ -167,7 +168,7 @@
                         return 'red lighten-4'
                     default:
                         this.join = !this.join
-                        return 'black'
+                        return 'grey lighten-2'
                 }
             },
 

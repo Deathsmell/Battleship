@@ -4,13 +4,13 @@ export default class Room {
                 host,
                 opponent,
                 roomStatus,
-                time) {
+                createTime) {
         this.room = room === null ? '' : room
         this.id = id === null ? '' : id
         this.host = host === null ? '< none >' : host
         this.opponent = opponent === null ? '< none >' : opponent
         this.roomStatus = roomStatus === undefined ? '' : roomStatus
-        this.time = time === null ? '' : time
+        this.createTime = createTime === null ? '' : createTime
     }
 
 
@@ -54,12 +54,12 @@ export default class Room {
         this._roomStatus = value;
     }
 
-    get time() {
-        return this._time;
+    get createTime() {
+        return this._createTime;
     }
 
-    set time(value) {
-        this._time = value;
+    set createTime(value) {
+        this._createTime = value;
     }
 
     toJSON() {
@@ -69,7 +69,7 @@ export default class Room {
             host: this._host,
             opponent: this._opponent,
             roomStatus: this._roomStatus,
-            createTime: this._time
+            createTime: this._createTime
         }
     }
 }

@@ -5,35 +5,35 @@ export default {
         subscribes: [],
     },
     getters: {
-        get(state, id) {
+        getSubscription(state, id) {
             const result = state.subscribes.find(subscribe => subscribe.roomId === id);
             console.log('GET ' + result.subscribe);
             return result.subscribe
         }
     },
     mutations: {
-        add(state, {roomId, subscribe}) {
+        addSubscription(state, {roomId, subscribe}) {
             return state.subscribes.push({roomId, subscribe})
         },
-        get(state, id) {
+        getSubscription(state, id) {
             const result = state.subscribes.find(subscribe => subscribe.roomId === id);
             console.log('GET ' + result.subscribe);
             return result.subscribe
         },
-        remove(state, id) {
+        removeSubscription(state, id) {
             const index = state.subscribes.findIndex(subscribe => subscribe.roomId === id);
             state.subscribes.splice(index, 1)
         }
     },
     actions: {
-        add({commit}, {roomId, subscribe}) {
-            commit('add', {roomId, subscribe})
+        addSubscription({commit}, {roomId, subscribe}) {
+            commit('addSubscription', {roomId, subscribe})
         },
-        get({commit}, id) {
-            commit('get', id)
+        getSubscription({commit}, id) {
+            commit('getSubscription', id)
         },
-        remove({commit}, id) {
-            commit('remove', id)
+        removeSubscription({commit}, id) {
+            commit('removeSubscription', id)
         },
     }
 }

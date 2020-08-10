@@ -1,6 +1,9 @@
 package by.deathsmell.battleship.domain;
 
+import by.deathsmell.battleship.converter.CustomUuidDeserializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +23,7 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonDeserialize(using = CustomUuidDeserializer.class)
     private UUID room;
     private String host;
     private String opponent;

@@ -57,6 +57,14 @@ public class RoomController {
         return roomRepo.findAll();
     }
 
+    // FIXME: Name method dont right. Create get method
+    @PutMapping
+    public Room updateRoom(@RequestBody Room room) {
+        Room roomFromDb = roomRepo.findByRoom(room.getRoom());
+        log.debug("Update room : {}", roomFromDb);
+        return roomFromDb;
+    }
+
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage,
@@ -90,10 +98,10 @@ public class RoomController {
                     RoomStatus roomStatus = roomFromDb.getRoomStatus();
                     if (roomStatus == RoomStatus.CREATE) {
                         joinFirstPlayer(roomId, sender, roomFromDb, roomStatus);
-                        accessor.getSessionAttributes().put("roomId",roomId);
+                        accessor.getSessionAttributes().put("roomId", roomId);
                     } else if (roomStatus == RoomStatus.WAIT) {
                         joinSecondPlayer(roomId, sender, roomFromDb, roomStatus);
-                        accessor.getSessionAttributes().put("roomId",roomId);
+                        accessor.getSessionAttributes().put("roomId", roomId);
                     } else {
                         return reportRoomFieldOrDestroyed();
                     }
@@ -117,6 +125,7 @@ public class RoomController {
         successMessage.setContent("Success join. Just enjoy");
         return successMessage;
     }
+
     //FIXME: Relocate in service class
     private ChatMessage reportRoomFieldOrDestroyed() {
         log.debug("Room filed or destroyed");
@@ -126,6 +135,7 @@ public class RoomController {
         errorResponseMessage.setContent("Room filed or destroyed");
         return errorResponseMessage;
     }
+
     //FIXME: Relocate in service class
     private void joinFirstPlayer(UUID roomId, String sender, Room roomFromDb, RoomStatus roomStatus) throws IncorrectStatusOfTheCreatedRoomException {
         if (null == roomFromDb.getHost() && null == roomFromDb.getOpponent()) {
@@ -140,6 +150,7 @@ public class RoomController {
             throw new IncorrectStatusOfTheCreatedRoomException();
         }
     }
+
     //FIXME: Relocate in service class
     private void joinSecondPlayer(UUID roomId, String sender, Room roomFromDb, RoomStatus roomStatus) throws IncorrectStatusOfTheCreatedRoomException {
         if (!sender.equals(roomFromDb.getHost()) && null == roomFromDb.getOpponent()) {

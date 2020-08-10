@@ -6,8 +6,8 @@
                 justify="center"
         >
             <v-col
-                    v-for="room in rooms"
-                    :key="'room-list-col-'+room.id"
+                    v-for="(room,index) in rooms"
+                    :key="'room-list-col-'+index"
                     cols="12"
                     sm="6"
             >
@@ -16,7 +16,7 @@
                         :roomStatus="room.roomStatus"
                         :host="room.host"
                         :opponent="room.opponent"
-                        :time="room.time"
+                        :createTime="room.createTime"
                         :room="room.room"
                         :name="name"
                 />
@@ -27,8 +27,7 @@
 
 <script>
     import RoomCard from "../components/list/RoomCard.vue";
-    import {API} from "../util/common";
-    import Room from "../entity/Room";
+    import {mapGetters} from 'vuex'
 
     export default {
         name: "RoomList",
@@ -37,36 +36,41 @@
         },
         data() {
             return {
-                rooms: [],
-                name: 'DWD',
                 done: false,
             }
         },
         created() {
-            this.getRooms()
+            //empty
+        },
+        computed: {
+            rooms:{
+                get(){
+                    let allRooms = this.getAllRooms();
+                    console.log(allRooms)
+                    return allRooms
+                },
+                set: function (room) {
+                    this.$store.commit("rooms/updateRoom",room)
+                }
+            },
+            name:{
+                get() {
+                    return this.getName()
+
+                },
+                set(name){
+                    this.$store.commit("user/setName",name)
+                }
+            }
         },
         methods: {
-
-            getRooms() {
-                this.$http.get(API + '/room/list').then(res => {
-                    res.body.forEach(room => {
-                        console.log(room);
-                        const newRoom = new Room(
-                            room.room,
-                            room.id,
-                            room.host,
-                            room.opponent,
-                            room.roomStatus,
-                            room.createTime
-                        );
-                        console.log(newRoom);
-                        if (this.rooms.indexOf(room) === -1){
-                            this.rooms.push(newRoom)
-                        }
-                    })
-                })
-            }
-        }
+            ...mapGetters('rooms', [
+                'getAllRooms'
+            ]),
+            ...mapGetters('user', [
+                'getName'
+            ]),
+        },
     }
 </script>
 

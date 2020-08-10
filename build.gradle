@@ -28,18 +28,23 @@ dependencies {
 }
 
 /*
-  Chek env system and if this chose "prod" start download node and yarn and build main.js file
+  Check env system and if this chose "prod" start download node and yarn and build main.js file
 */
 def isProd = System.getenv("spring.profiles.active")
 isProd = isProd != null ? isProd : "dev"
 if (isProd.equals("prod")) {
-    task buildFront(type: YarnTask) {
+    task taskFront(type: YarnTask) {
         args = ['build']
     }
-    yarn_install.dependsOn(yarn_cache_clean)
-    buildFront.dependsOn(yarn_install)
-    processResources.dependsOn(buildFront)
+} else {
+//    task taskFront(type: YarnTask) {
+//        args = ['start']
+//    }
 }
+//yarn_install.dependsOn(yarn_cache_clean)
+//taskFront.dependsOn(yarn_install)
+//processResources.dependsOn(taskFront)
+
 
 node {
     download = true

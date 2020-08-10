@@ -121,6 +121,7 @@ public class WebSocketChatEventListener {
                     } else {
                         log.debug("Room have give status DESTROY");
                         room.setRoomStatus(DESTROY);
+                        roomRepo.save(room);
                         createReport(username, MessageType.LEAVE, room.getRoom());
                     }
                 }

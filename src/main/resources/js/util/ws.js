@@ -11,6 +11,7 @@ export function connect(sender) {
     const socket = new SockJS('/room-chat')
     stompClient = Stomp.over(socket)
     stompClient.connect({sender}, frame => {
+        console.log("CONNECT!!!")
         console.log(frame)
         registrationNewUser(sender)
         subscribeGlobalChat()
@@ -26,8 +27,9 @@ function onMessageReceive(resp) {
     } else if (message.type === 'JOIN') {
         console.log("JOIN METHOD!!!")
         console.log(resp.headers.subscription);
-        // const subscribe = JSON.parse(resp.headers.subscription)
         subscribers.push({id: message.roomId, subscribe: resp.headers.subscription});
+    } else {
+        //TODO: return error request and prohibition router push
     }
 
 }
@@ -45,7 +47,7 @@ export function disconnect() {
     }
 }
 
-export function sendMessageInChat(message, roomId) {
+export function sendMessageInChat(message, uuid) {
     if ('' === message.sender || null === message.sender) {
         console.error('Dont have sender header. Sender equal ' + message.sender)
     }
@@ -53,12 +55,12 @@ export function sendMessageInChat(message, roomId) {
         message.type = 'CHAT'
         console.error('Incorrect message type ')
     }
-    if (roomId === undefined) {
+    if (uuid === undefined || uuid === null) {
         message.roomId = ''
         stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(message))
     } else {
         if (message.content !== '') {
-            stompClient.send("/app/room/" + roomId + "/chat.sendMessage", {}, JSON.stringify(message))
+            stompClient.send("/app/room/" + uuid + "/chat.sendMessage", {}, JSON.stringify(message))
         } else {
             console.log('Message empty!')
         }
@@ -67,14 +69,12 @@ export function sendMessageInChat(message, roomId) {
 
 export function registrationNewUser(sender) {
     stompClient.send("/app/chat.addUser", {}, JSON.stringify({ sender, type: 'JOIN'}))
-
-    // TODO: remove this method and create storage action or equivalent
-    sessionStorage.setItem('username',sender)
 }
 
 export function joinToRoom(room, sender) {
     console.log("Join to room")
     stompClient.subscribe('/topic/room/' + room,onMessageReceive)
+    // TODO: rewrite object in request on new ChatMessage()
     stompClient.send('/app/room/' + room + '/join', {}, JSON.stringify({
         sender: sender,
         connect:"",
@@ -87,6 +87,7 @@ export function subscribeGlobalChat() {
     stompClient.subscribe('/topic/public', onMessageReceive)
 }
 
+// TODO: Rewrite parameters on give Room class
 export function unsubscribe(roomId) {
     console.log('roomId = ' + roomId)
     let index = subscribers.findIndex(value => value.id = roomId);
@@ -95,6 +96,6 @@ export function unsubscribe(roomId) {
         subscribers.splice(index, 1)
     } else {
         console.error("Not found subscription. Room id: " + roomId)
-        error(subscribers)
+        error(subscribers) // ??
     }
 }

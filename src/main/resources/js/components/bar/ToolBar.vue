@@ -2,7 +2,7 @@
   <v-toolbar dense>
     <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-    <v-toolbar-title>Title</v-toolbar-title>
+    <v-toolbar-title>{{getName}}</v-toolbar-title>
 
     <v-spacer></v-spacer>
 
@@ -21,6 +21,9 @@
 </template>
 
 <script>
+
+  import {mapGetters} from 'vuex'
+
 export default {
   name: "ToolBar",
 
@@ -28,7 +31,9 @@ export default {
     return {
 
     }
-  }
+  },
+
+  computed: mapGetters('user',['getName']),
 }
 </script>
 
