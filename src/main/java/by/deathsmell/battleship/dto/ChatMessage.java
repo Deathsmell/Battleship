@@ -1,12 +1,9 @@
 package by.deathsmell.battleship.dto;
 
 
-import by.deathsmell.battleship.domain.Room;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 //@Entity
 @Data
@@ -24,7 +21,7 @@ public class ChatMessage {
 //    private Room room;
 
 
-    public enum MessageType {
+    public enum MessageType implements ReportType {
         CHAT, JOIN, LEAVE, DISCONNECT
     }
 

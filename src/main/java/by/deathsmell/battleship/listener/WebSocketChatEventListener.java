@@ -5,6 +5,7 @@ import by.deathsmell.battleship.dto.ChatMessage;
 import by.deathsmell.battleship.exception.IllegalRoomStateException;
 import by.deathsmell.battleship.exception.IllegalSenderAction;
 import by.deathsmell.battleship.repositories.RoomRepository;
+import by.deathsmell.battleship.service.RoomCreator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -21,42 +22,42 @@ import static by.deathsmell.battleship.dto.ChatMessage.MessageType;
 
 @Component
 @Slf4j
-public class WebSocketChatEventListener {
+public class WebSocketChatEventListener implements WebSocketEventListener {
 
 
     private final SimpMessageSendingOperations messagingTemplate;
-    private final RoomRepository roomRepo;
+    private final RoomCreator roomCreator;
 
     @Autowired
-    public WebSocketChatEventListener(SimpMessageSendingOperations messagingTemplate, RoomRepository roomRepo) {
+    public WebSocketChatEventListener(SimpMessageSendingOperations messagingTemplate, RoomCreator roomCreator) {
         this.messagingTemplate = messagingTemplate;
-        this.roomRepo = roomRepo;
+        this.roomCreator = roomCreator;
     }
 
-    @EventListener
+    @Override
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
         log.info("Received a new web socket connection. Session id: {}", accessor.getSessionId());
     }
 
-    @EventListener
+    @Override
     public void handleWebSocketSubscribeListener(SessionSubscribeEvent event) {
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
+//        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
     }
 
-    @EventListener
+    @Override
     public void handleWebSocketUnsubscribeListener(SessionUnsubscribeEvent event) {
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        roomDestroy(event);
+//        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
+        roomCreator.roomDestroy(event, null, null, null, true);
 
     }
 
-    @EventListener
+    @Override
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
-        if (sessionAttributes == null || sessionAttributes.isEmpty()){
-            log.error("Illegal session state. Session id: {}",headerAccessor.getSessionId());
+        if (sessionAttributes == null || sessionAttributes.isEmpty()) {
+            log.error("Illegal session state. Session id: {}", headerAccessor.getSessionId());
             throw new RuntimeException();
         }
         String username = (String) sessionAttributes.get("sender");
@@ -64,72 +65,14 @@ public class WebSocketChatEventListener {
         String sessionId = headerAccessor.getSessionId();
 
         if (roomID != null) {
-            roomDestroy(event, username);
+            roomCreator.roomDestroy(event, username, null, null, true);
         }
         log.info("Disconnect user :{}, session id: {}. Room id : {}", username, sessionId, roomID);
 
         createReport(username, MessageType.DISCONNECT);
     }
 
-    private void roomDestroy(final AbstractSubProtocolEvent event) {
-        roomDestroy(event, null);
-    }
-
-    private void roomDestroy(final AbstractSubProtocolEvent event, String username) {
-
-
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
-        UUID roomId = (UUID) accessor.getSessionAttributes().get("roomId");
-        log.debug("Starting room destroy event. Input values: room id - {} , username - {}",
-                roomId,
-                username);
-        if (roomId != null) {
-            Room room = roomRepo.findByRoom(roomId);
-            log.debug("Move in db and get {}", room);
-            if (room != null) {
-
-                username = username == null ?
-                        (String) accessor.getSessionAttributes().get("sender")
-                        : username;
-
-                if (!username.isEmpty()) {
-                    boolean hasPlayer1 = username.equals(room.getHost());
-                    boolean hasPlayer2 = username.equals(room.getOpponent());
-                    if (hasPlayer1 && hasPlayer2) {
-                        log.error("Sender listed in two room slots. Illegal room state. Sender : {}, {}", username, roomId);
-                        throw new IllegalRoomStateException();
-                    }
-                    if (hasPlayer1) {
-                        room.setHost(null);
-                        accessor.getSessionAttributes().remove("roomId");
-                    } else {
-                        if (hasPlayer2) {
-                            room.setOpponent(null);
-                            accessor.getSessionAttributes().remove("roomId");
-                        } else {
-                            log.error("Player not belongs that room. Sender : {} expect {} or {} , room id: {}",
-                                    username,
-                                    room.getHost(),
-                                    room.getOpponent(),
-                                    roomId);
-                            throw new IllegalSenderAction();
-                        }
-                    }
-                    if (room.getHost() == null && room.getOpponent() == null && room.getRoomStatus().equals(DESTROY)) {
-                        log.info("Room is empty. Deleting: {}", room);
-                        roomRepo.delete(room);
-                    } else {
-                        log.debug("Room have give status DESTROY");
-                        room.setRoomStatus(DESTROY);
-                        roomRepo.save(room);
-                        createReport(username, MessageType.LEAVE, room.getRoom());
-                    }
-                }
-
-            }
-        }
-    }
-
+    // TODO: create common report class
     private void createReport(String username, MessageType type) {
         createReport(username, type, null);
     }

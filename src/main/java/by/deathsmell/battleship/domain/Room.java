@@ -1,9 +1,9 @@
 package by.deathsmell.battleship.domain;
 
 import by.deathsmell.battleship.converter.CustomUuidDeserializer;
+import by.deathsmell.battleship.dto.ReportType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -35,7 +35,7 @@ public class Room {
 //    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<ChatMessage> chat = new ArrayList<>();
 
-    public enum RoomStatus {
+    public enum RoomStatus implements ReportType {
         CREATE, WAIT, FILED, DESTROY
     }
 
