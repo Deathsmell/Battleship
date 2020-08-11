@@ -148,7 +148,7 @@
             },
             name: {
                 get() {
-                    return this.$route.params.name
+                    return this.$store.state.user.name
                 }
             }
         },

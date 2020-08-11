@@ -7,7 +7,7 @@ export default {
         name: '',
         roomId: '',
         sessionId: '',
-        registered : false
+        registered : true
     },
 
     getters: {
@@ -30,7 +30,7 @@ export default {
             state.name = name
         },
         setRegistration(state){
-            state.registered = true
+            state.registered = false
         },
         setCurrentRoomId(state, roomId){
             state.roomId = roomId
