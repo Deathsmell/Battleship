@@ -105,9 +105,9 @@
 </template>
 
 <script>
-    import {addHandler, sendMessageInChat, unsubscribe} from "../../util/ws"
-    import {scrollToBottom} from "../../util/scroll"
-    import roomsApi from "../../API/rooms"
+    import {addHandler, sendMessageInChat, unsubscribe} from "@util/ws"
+    import {scrollToBottom} from "@util/scroll"
+    import roomsApi from "@api/rooms"
 
 
     export default {

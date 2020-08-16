@@ -93,11 +93,9 @@
 </template>
 
 <script>
-    import {joinToRoom} from "../../util/ws";
+    import {joinToRoom} from "@util/ws";
     import {mapGetters} from "vuex"
     import roomsApi from "../../API/rooms"
-    import Room from "../../entity/Room";
-    import {API} from "../../util/common";
 
     export default {
         name: "RoomCard",

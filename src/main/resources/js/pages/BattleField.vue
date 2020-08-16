@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import opponent from "../components/desk/EnemyDesk.vue"
-import yourDesk from "../components/desk/YourDesk.vue"
-import StatWindow from "../components/statistic/StatWindow.vue"
-import Chat from "../components/chat/Chat.vue";
+import opponent from "@component/desk/EnemyDesk.vue"
+import yourDesk from "@component/desk/YourDesk.vue"
+import StatWindow from "@component/statistic/StatWindow.vue"
+import Chat from "@component/chat/Chat.vue";
 
 export default {
   name: "BattleField",

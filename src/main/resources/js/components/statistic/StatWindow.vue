@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {connect} from "../../util/ws";
+import {connect} from "@util/ws";
 
 export default {
   name: "StatWindow",

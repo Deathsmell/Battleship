@@ -10,7 +10,7 @@
 <script>
 
 import Desk from "./Desk.vue";
-import {API, emptyDesk} from "../../util/common";
+import {API, emptyDesk} from "@util/common";
 
 export default {
   name: "OpponentDesk",

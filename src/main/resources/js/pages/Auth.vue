@@ -22,8 +22,8 @@
 
 <script>
     import {mapActions} from 'vuex'
-    import {connect} from '../util/ws'
-    import userApi from "../API/user"
+    import {connect} from '@util/ws'
+    import userApi from "@api/user"
 
     export default {
         name: "Auth",
@@ -42,12 +42,13 @@
         methods: {
             ...mapActions('user', ['setName']),
 
-            registration() {
-                userApi.signUp(this.name).then(res => {
-                    console.log(res.bodyText)
-                }).catch(error => {
-                    console.error(error.bodyText)
-                })
+            async registration() {
+              let signUp = await userApi.signUp(this.name);
+              const res = signUp.bodyText;
+              console.log(res);
+              //   .catch(error => {
+                //     console.error(error.bodyText)
+                // })
             },
 
             login() {

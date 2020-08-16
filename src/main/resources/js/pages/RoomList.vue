@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import RoomCard from "../components/list/RoomCard.vue";
+    import RoomCard from "@component/list/RoomCard.vue";
     import {mapGetters, mapActions} from 'vuex'
 
     export default {

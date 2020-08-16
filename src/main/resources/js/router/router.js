@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import BattleField from "../pages/BattleField.vue";
-import Chat from "../components/chat/Chat.vue";
+import Chat from "@component/chat/Chat.vue";
 import WelcomePage from "../pages/WelcomePage.vue";
 import RoomList from "../pages/RoomList.vue";
-import RoomCard from "../components/list/RoomCard.vue";
+import RoomCard from "@component/list/RoomCard.vue";
 import Auth from "../pages/Auth.vue";
 
 

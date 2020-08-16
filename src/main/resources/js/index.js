@@ -5,6 +5,7 @@ import router from "./router/router";
 import VueResource from 'vue-resource'
 import store from "./store/store";
 
+
 Vue.use(VueResource)
 
 new Vue({

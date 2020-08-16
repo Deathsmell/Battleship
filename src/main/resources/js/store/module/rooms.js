@@ -1,5 +1,5 @@
-import roomsApi from "../../API/rooms";
-import Room from "../../entity/Room";
+import roomsApi from "@api/rooms";
+import Room from "@entity/Room";
 
 export default {
     namespaced: true,
@@ -41,7 +41,7 @@ export default {
             console.log("STARTING FIND ROOM BY UUID")
             console.log(uuid);
             const index = state.rooms.findIndex(room => room.room === uuid);
-            console.log("inxdex = "  + index);
+            console.log("inxdex = " + index);
             console.log(state.rooms[index]);
             return state.rooms[index] || ''
 
@@ -72,7 +72,7 @@ export default {
             } else if (index !== -1) {
                 console.log("UPDATE SPLICE")
                 console.log(state.rooms);
-                state.rooms = [...state.rooms.splice(index,1,room)]
+                state.rooms = [...state.rooms.splice(index, 1, room)]
                 console.log(state.rooms)
             }
             console.log("MUTATION UPDATE END")
@@ -87,36 +87,34 @@ export default {
         },
     },
     actions: {
-        getListRooms({commit}) {
-            console.log("Get list")
-            roomsApi.getListRooms().then(res => {
-                    res.body.forEach(room => {
-                        const newRoom = new Room(
-                            room.room,
-                            room.id,
-                            room.host,
-                            room.opponent,
-                            room.roomStatus,
-                            room.createTime
-                        );
-                        console.log(newRoom);
-                        commit('addRoom', newRoom)
-                    })
-                }
-            )
-        },
-        addRoom({commit}, room) {
-            commit('addRoom', room)
-        },
-        updateRoom({commit}, room) {
-            roomsApi.updateRoom(room).then(resp => {
-                console.log("STARTING UPDATE")
-                const respRoom = resp.data;
-                console.log(resp.data)
-                commit('updateRoom', respRoom)
+        async getListRooms({commit}) {
+            console.log("GET LIST ROOMS")
+            const response = await roomsApi.getListRooms()
+            const rooms = response.body
+            rooms.forEach(room => {
+                const newRoom = new Room(
+                    room.room,
+                    room.id,
+                    room.host,
+                    room.opponent,
+                    room.roomStatus,
+                    room.createTime
+                );
+                console.log(newRoom);
+                commit('addRoom', newRoom)
             })
         },
-        removeRoom({commit}, room) {
+        async addRoom({commit}, room) {
+            commit('addRoom', room)
+        },
+        async updateRoom({commit}, room) {
+            console.log("STARTING UPDATE")
+            const response = await roomsApi.updateRoom(room)
+            const updatedRoom = response.data
+            console.log(updatedRoom)
+            commit('updateRoom', updatedRoom)
+        },
+        async removeRoom({commit}, room) {
             commit('removeRoom', room)
         }
     }

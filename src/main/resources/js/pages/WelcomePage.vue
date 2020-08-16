@@ -52,9 +52,9 @@
 </template>
 
 <script>
-    import {joinToRoom} from '../util/ws'
-    import Chat from "../components/chat/Chat.vue";
-    import roomApi from '../API/rooms'
+    import {joinToRoom} from '@util/ws'
+    import Chat from "@component/chat/Chat.vue";
+    import roomApi from '@api/rooms'
     import {mapActions} from "vuex"
 
 

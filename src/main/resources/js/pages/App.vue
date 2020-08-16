@@ -9,7 +9,7 @@
 
 <script>
 
-import ToolBar from "../components/bar/ToolBar.vue";
+import ToolBar from "../components/bar/ToolBar";
 
 export default {
   name: "App",
