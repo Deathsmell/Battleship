@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    compile "org.springframework.boot:spring-boot-starter-security"
+    implementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation("com.google.guava:guava:29.0-jre")
     runtimeOnly 'com.h2database:h2'
@@ -37,9 +39,9 @@ if (isProd.equals("prod")) {
         args = ['build']
     }
 } else {
-//    task taskFront(type: YarnTask) {
-//        args = ['start']
-//    }
+    task taskFront(type: YarnTask) {
+        args = ['start']
+    }
 }
 //yarn_install.dependsOn(yarn_cache_clean)
 //taskFront.dependsOn(yarn_install)

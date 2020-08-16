@@ -41,7 +41,8 @@ export default {
             console.log("STARTING FIND ROOM BY UUID")
             console.log(uuid);
             const index = state.rooms.findIndex(room => room.room === uuid);
-            console.log(index);
+            console.log("inxdex = "  + index);
+            console.log(state.rooms[index]);
             return state.rooms[index] || ''
 
         },
@@ -49,6 +50,8 @@ export default {
     },
     mutations: {
         addRoom(state, room) {
+            console.log("ADD ROOM")
+            console.log(room)
             state.rooms = [
                 ...state.rooms,
                 room
@@ -56,13 +59,24 @@ export default {
         },
         updateRoom(state, room) {
             const index = state.rooms.findIndex(value => value.id === room.id);
+            console.log("MUTATION UPDATE STARTING")
+            console.log("Index = " + index)
+            console.log(room)
             if (index > 2) {
+                console.log("UPDATE SLICE")
                 state.rooms = [
                     state.rooms.slice(0, index),
                     room,
                     state.rooms.slice(index + 1)
                 ]
+            } else if (index !== -1) {
+                console.log("UPDATE SPLICE")
+                console.log(state.rooms);
+                state.rooms = [...state.rooms.splice(index,1,room)]
+                console.log(state.rooms)
             }
+            console.log("MUTATION UPDATE END")
+            console.log(state.rooms);
         },
         removeRoom(state, room) {
             const index = state.rooms.findIndex(value => value.id === room.id);
@@ -75,7 +89,7 @@ export default {
     actions: {
         getListRooms({commit}) {
             console.log("Get list")
-            roomsApi.getListRoomsApi().then(res => {
+            roomsApi.getListRooms().then(res => {
                     res.body.forEach(room => {
                         const newRoom = new Room(
                             room.room,

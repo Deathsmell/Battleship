@@ -7,7 +7,10 @@ Vue.use(VueResource)
 const rooms = Vue.resource(API + 'room{/action}');
 
 export default {
-    createRoomApi: () => rooms.get({action: 'create'}),
-    getListRoomsApi: () => rooms.get({action: 'list'}),
-    updateRoom: (room) => rooms.update({room: room})
+    createRoom: () => rooms.get({action: 'create'}),
+    getListRooms: () => rooms.get({action: 'allRooms'}),
+    // TODO: Needed it ?
+    updateRoom: (room) => rooms.update({room: room}),
+    joinRoom: (room) => rooms.get({action: 'join', room}),
+    getRoomByUUID: (uuid) => rooms.get({action: 'get', uuid})
 }

@@ -22,7 +22,7 @@ public class ChatMessage {
 
 
     public enum MessageType implements ReportType {
-        CHAT, JOIN, LEAVE, DISCONNECT
+        CHAT, JOIN, LEAVE, DISCONNECT,EMPTY;
     }
 
 }

@@ -9,5 +9,7 @@ public interface ReportMessageCreator<T> {
 
     void createAndSendTo(String sendTo,String text, String sender, ReportType type);
 
+    T empty();
+
     // TODO: sendToUSer, createAndSendToUser, publicReport and etc.
 }

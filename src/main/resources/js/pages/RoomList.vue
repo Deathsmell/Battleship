@@ -27,7 +27,7 @@
 
 <script>
     import RoomCard from "../components/list/RoomCard.vue";
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
 
     export default {
         name: "RoomList",
@@ -36,40 +36,45 @@
         },
         data() {
             return {
-                done: false,
+                //empty
             }
         },
         created() {
-            //empty
+            this.getListRooms()
         },
         computed: {
-            rooms:{
-                get(){
-                    let allRooms = this.getAllRooms();
-                    console.log(allRooms)
-                    return allRooms
+            rooms: {
+                get() {
+                    return this.getAllRooms()
                 },
                 set: function (room) {
-                    this.$store.commit("rooms/updateRoom",room)
+                    this.updateRoom(room)
                 }
             },
-            name:{
+            name: {
                 get() {
                     return this.getName()
 
                 },
-                set(name){
-                    this.$store.commit("user/setName",name)
+                set(name) {
+                    this.setName(name)
                 }
             }
         },
         methods: {
             ...mapGetters('rooms', [
-                'getAllRooms'
+                'getAllRooms',
             ]),
             ...mapGetters('user', [
                 'getName'
             ]),
+            ...mapActions('rooms', [
+                'getListRooms',
+                'updateRoom'
+            ]),
+            ...mapActions('user', [
+                'setName'
+            ])
         },
     }
 </script>

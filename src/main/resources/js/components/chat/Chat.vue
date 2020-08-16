@@ -23,7 +23,7 @@
                 </v-btn-toggle>
             </v-col>
             <v-col
-                    cols="1"
+                    cols="2"
             >
                 <v-btn-toggle>
                     <v-btn
@@ -40,7 +40,7 @@
                 </v-btn-toggle>
             </v-col>
             <v-col
-                    cols="7"
+                    cols="6"
                     class="grey lighten-4"
             >
                 <v-container>
@@ -67,8 +67,6 @@
                         id="chat-window"
                         ref="chatWindow"
                 >
-                    <!--TODO rebuild justify env. When receive new message check username and chose side left or right -->
-                    <!--FIXME: Sometimes message comes on does not needed side. Probably name does not set-->
                     <v-row
                             no-gutters
                             v-for="message in messages"
@@ -109,7 +107,7 @@
 <script>
     import {addHandler, sendMessageInChat, unsubscribe} from "../../util/ws"
     import {scrollToBottom} from "../../util/scroll"
-    import {mapGetters} from 'vuex'
+    import roomsApi from "../../API/rooms"
 
 
     export default {
@@ -127,9 +125,6 @@
                 },
 
                 roomId: '',
-                // TODO: store variable. Rewrite!
-                disable: false,
-                subscribe: -1,
             }
         },
 
@@ -141,9 +136,10 @@
 
         computed: {
             room: {
+                // FIXME: undefined. Store dont contain room
                 get() {
                     const uuid = this.$route.params.id;
-                    return this.getRoomByUUID()(uuid)
+                    return roomsApi.getRoomByUUID(uuid)
                 }
             },
             name: {
@@ -160,9 +156,6 @@
         },
 
         methods: {
-
-            ...mapGetters('rooms', ['getRoomByUUID']),
-
 
             exitRoom() {
                 // TODO: rewrite variable on this.room

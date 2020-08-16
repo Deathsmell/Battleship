@@ -22,7 +22,6 @@
                         class="card-action"
                 >
                     <v-btn
-                            :disabled="join"
                             @click="joinInRoom"
                     >
                         Join
@@ -96,6 +95,9 @@
 <script>
     import {joinToRoom} from "../../util/ws";
     import {mapGetters} from "vuex"
+    import roomsApi from "../../API/rooms"
+    import Room from "../../entity/Room";
+    import {API} from "../../util/common";
 
     export default {
         name: "RoomCard",
@@ -137,24 +139,26 @@
             }
         },
 
-        computed:{
-            join(){
+        computed: {
+            join() {
                 return this.roomStatus !== "WAIT"
             }
         },
         data() {
-            return {
-            }
+            return {}
         },
 
         methods: {
 
-            ...mapGetters('user',['getName']),
+            ...mapGetters('user', ['getName']),
 
             joinInRoom() {
-                joinToRoom(this.room, this.name)
-
-                this.$router.push({path: `room/${this.getName()}/${this.room}`})
+                roomsApi.joinRoom(this.room).then(res =>{
+                    joinToRoom(this.room)
+                    this.$router.push({path: `room/${this.getName()}/${this.room}`})
+                }).catch(error => {
+                    console.log(error);
+                })
             },
 
             statusColor() {

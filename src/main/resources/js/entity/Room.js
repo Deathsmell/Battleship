@@ -6,7 +6,7 @@ export default class Room {
                 roomStatus,
                 createTime) {
         this.room = room === null ? '' : room
-        this.id = id === null ? '' : id
+        this.id = id === undefined ? '' : id
         this.host = host === null ? '< none >' : host
         this.opponent = opponent === null ? '< none >' : opponent
         this.roomStatus = roomStatus === undefined ? '' : roomStatus
@@ -65,7 +65,7 @@ export default class Room {
     toJSON() {
         return {
             room: this._room,
-            id: this._id,
+            // id: this._id,
             host: this._host,
             opponent: this._opponent,
             roomStatus: this._roomStatus,

@@ -71,15 +71,14 @@ export function registrationNewUser(sender) {
     stompClient.send("/app/chat.addUser", {}, JSON.stringify({ sender, type: 'JOIN'}))
 }
 
-export function joinToRoom(room, sender) {
-    console.log("Join to room")
+export function joinToRoom(room) {
     stompClient.subscribe('/topic/room/' + room,onMessageReceive)
-    // TODO: rewrite object in request on new ChatMessage()
-    stompClient.send('/app/room/' + room + '/join', {}, JSON.stringify({
-        sender: sender,
-        connect:"",
-        type: 'JOIN'
-    }))
+    // // TODO: rewrite object in request on new ChatMessage()
+    // stompClient.send('/app/room/' + room + '/join', {}, JSON.stringify({
+    //     sender: sender,
+    //     connect:"",
+    //     type: 'JOIN'
+    // }))
 
 }
 

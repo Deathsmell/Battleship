@@ -37,7 +37,6 @@ public class ChatController {
                                SimpMessageHeaderAccessor headerAccessor) {
         String sender = chatMessage.getSender();
         if (null != sender) {
-            headerAccessor.getSessionAttributes().put("sender", sender);
             log.info("Registration new user: {}.", sender);
         } else {
             log.error("Username empty");
