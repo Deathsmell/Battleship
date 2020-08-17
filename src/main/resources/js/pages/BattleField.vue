@@ -9,7 +9,9 @@
       </v-col>
     </v-row>
     <v-row>
-      <chat/>
+      <chat
+          :room-id="this.$route.params.id"
+      />
     </v-row>
   </v-container>
 </template>

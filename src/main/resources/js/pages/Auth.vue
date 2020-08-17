@@ -43,20 +43,24 @@
             ...mapActions('user', ['setName']),
 
             async registration() {
-              let signUp = await userApi.signUp(this.name);
-              const res = signUp.bodyText;
-              console.log(res);
-              //   .catch(error => {
-                //     console.error(error.bodyText)
-                // })
+              try {
+                let signUp = await userApi.signUp(this.name);
+                const res = signUp.bodyText;
+                console.log(res);
+              } catch (error) {
+                console.error(`${error.bodyText}`)
+              }
             },
 
-            login() {
-                userApi.signIn(this.name).then(res => {
-                    console.log(res.status)
-                    connect(this.name)
-                    this.$router.push({path: '/'})
-                })
+            async login() {
+              try {
+                const response = await userApi.signIn(this.name)
+                console.log(`Success login. Status response ${response.status}`)
+                await connect(this.name)
+                await this.$router.push({path: '/'})
+              } catch (error){
+                console.error(`Login error. Status response ${error.status}`)
+              }
             }
         },
 

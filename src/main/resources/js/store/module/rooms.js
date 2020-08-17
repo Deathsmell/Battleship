@@ -1,5 +1,5 @@
 import roomsApi from "@api/rooms";
-import Room from "@entity/Room";
+import {Room} from "@entity/Room.ts";
 
 export default {
     namespaced: true,
@@ -22,9 +22,12 @@ export default {
             })
         },
         getActualRoom(state) {
-            return state.rooms.filter(rooms => {
-                return rooms.status === 'WAIT'
-            }).sort((a, b) => {
+            console.log(state.rooms)
+            let filter = state.rooms.filter(rooms => {
+                return rooms.roomStatus === 'WAIT'
+            });
+            console.log(filter);
+            let sort = filter.sort((a, b) => {
                 if (a.id < b.id) {
                     return 1
                 }
@@ -32,7 +35,9 @@ export default {
                     return -1
                 }
                 return 0
-            })
+            });
+            console.log(sort);
+            return sort
         },
         getRoomById(state, id) {
             return state.rooms.find(room => room.id === id)
@@ -59,9 +64,11 @@ export default {
         },
         updateRoom(state, room) {
             const index = state.rooms.findIndex(value => value.id === room.id);
+
             console.log("MUTATION UPDATE STARTING")
             console.log("Index = " + index)
             console.log(room)
+
             if (index > 2) {
                 console.log("UPDATE SLICE")
                 state.rooms = [
@@ -86,19 +93,22 @@ export default {
             ]
         },
     },
+
     actions: {
         async getListRooms({commit}) {
             console.log("GET LIST ROOMS")
             const response = await roomsApi.getListRooms()
             const rooms = response.body
+            console.log(rooms);
             rooms.forEach(room => {
-                const newRoom = new Room(
-                    room.room,
-                    room.id,
-                    room.host,
-                    room.opponent,
-                    room.roomStatus,
-                    room.createTime
+                const newRoom = new Room({
+                    id: room.id,
+                    room: room.room,
+                    host: room.host,
+                    opponent: room.opponent,
+                    roomStatus: room.roomStatus,
+                    createTime: room.createTime,
+                    }
                 );
                 console.log(newRoom);
                 commit('addRoom', newRoom)

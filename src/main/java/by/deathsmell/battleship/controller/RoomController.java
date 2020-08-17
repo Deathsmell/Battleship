@@ -62,6 +62,7 @@ public class RoomController {
     @GetMapping("/join")
     public ResponseEntity<String> joinToRoom(@AuthenticationPrincipal User user,
                                              @RequestParam UUID room) {
+        log.debug("START JOINING IN ROOM " + room );
         try {
             roomCreator.joinToRoom(room, user);
         } catch (IncorrectStatusOfTheCreatedRoomException |

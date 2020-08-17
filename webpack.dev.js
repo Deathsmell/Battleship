@@ -11,7 +11,7 @@ module.exports = merge.merge(common, {
         allowedHosts: [
             'localhost:8080'
         ],
-        stats: 'errors-only',
-        clientLogLevel: 'error',
+        // stats: 'errors-only',
+        // clientLogLevel: 'error',
     },
 })

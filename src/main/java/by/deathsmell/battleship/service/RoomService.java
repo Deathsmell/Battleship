@@ -12,16 +12,13 @@ import by.deathsmell.battleship.repositories.RoomRepository;
 import com.sun.istack.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.messaging.AbstractSubProtocolEvent;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 import static by.deathsmell.battleship.domain.Room.RoomStatus.*;
-import static by.deathsmell.battleship.dto.ChatMessage.MessageType.CHAT;
+import static by.deathsmell.battleship.dto.ChatMessage.MessageType.JOIN;
 import static by.deathsmell.battleship.dto.ChatMessage.MessageType.LEAVE;
 
 @Slf4j
@@ -70,7 +67,7 @@ public class RoomService implements RoomCreator {
                 messageCreator.createAndSendTo(
                         "/topic/room/" + room.toString(),
                         "Success join. Just enjoy",
-                        "SERVER", CHAT
+                        "SERVER", JOIN
                 );
             } else {
                 log.error("Room uuid illegal or room not exist");
@@ -94,27 +91,21 @@ public class RoomService implements RoomCreator {
 
         log.debug("Move in db and get {}", room);
         if (room != null) {
-            boolean hasHost = room.getHost().equals(username);
-            boolean hasOpponent = room.getOpponent().equals(username);
+            boolean hasHost = username.equals(room.getHost());
+            boolean hasOpponent = username.equals(room.getOpponent());
             if (hasHost && hasOpponent) {
                 log.error("Sender listed in two room slots. Illegal room state. Sender : {}", username);
                 throw new IllegalRoomStateException();
             }
-            if (hasHost) {
-                room.setHost(null);
-            } else {
-                if (hasOpponent) {
-                    room.setOpponent(null);
-                } else {
-                    log.error("Player not belongs that room. Sender : {} expect {} or {} , room uuid: {}",
-                            username,
-                            room.getHost(),
-                            room.getOpponent(),
-                            room.getRoom());
-                    throw new IllegalSenderAction("Player not belongs that room");
-                }
+            if (!(hasHost || hasOpponent)) {
+                log.error("Player not belongs that room. Sender : {} expect {} or {} , room uuid: {}",
+                        username,
+                        room.getHost(),
+                        room.getOpponent(),
+                        room.getRoom());
+                throw new IllegalSenderAction("Player not belongs that room");
             }
-            if (room.getHost() == null && room.getOpponent() == null && room.getRoomStatus().equals(DESTROY)) {
+            if (room.getRoomStatus().equals(DESTROY)) {
                 log.info("Room is empty. Deleting: {}", room);
                 roomRepo.delete(room);
             } else {

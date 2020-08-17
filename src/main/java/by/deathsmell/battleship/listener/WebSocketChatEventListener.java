@@ -45,6 +45,7 @@ public class WebSocketChatEventListener implements WebSocketEventListener {
     @Override
     public void handleWebSocketUnsubscribeListener(SessionUnsubscribeEvent event) {
         String username = getUsername(event);
+        log.debug(username + "started unsubscribe event");
         roomCreator.roomDestroy(username);
 
     }
@@ -52,7 +53,12 @@ public class WebSocketChatEventListener implements WebSocketEventListener {
     @Override
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         String username = getUsername(event);
-        roomCreator.roomDestroy(username);
+        log.debug("Started disconnect event for " + username);
+        try {
+            roomCreator.roomDestroy(username);
+        } catch (IllegalArgumentException e){
+            log.warn("Room not found. May be error or room not exist");
+        }
         log.info("Disconnect user :{}", username);
 
         // TODO: 8/14/20 Create report to user or room where he was

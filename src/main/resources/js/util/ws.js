@@ -1,6 +1,5 @@
 import SockJS from 'sockjs-client'
 import {Stomp} from '@stomp/stompjs'
-import {error} from "vue-resource/src/util";
 
 
 let stompClient = null
@@ -24,14 +23,7 @@ function onMessageReceive(resp) {
     console.log(message)
     if (message.type === 'CHAT') {
         handlers.forEach(handler => handler(message))
-    } else if (message.type === 'JOIN') {
-        console.log("JOIN METHOD!!!")
-        console.log(resp.headers.subscription);
-        subscribers.push({id: message.roomId, subscribe: resp.headers.subscription});
-    } else {
-        //TODO: return error request and prohibition router push
     }
-
 }
 
 export function addHandler(handler) {
@@ -68,18 +60,12 @@ export function sendMessageInChat(message, uuid) {
 }
 
 export function registrationNewUser(sender) {
-    stompClient.send("/app/chat.addUser", {}, JSON.stringify({ sender, type: 'JOIN'}))
+    stompClient.send("/app/chat.addUser", {}, JSON.stringify({sender, type: 'JOIN'}))
 }
 
 export function joinToRoom(room) {
-    stompClient.subscribe('/topic/room/' + room,onMessageReceive)
-    // // TODO: rewrite object in request on new ChatMessage()
-    // stompClient.send('/app/room/' + room + '/join', {}, JSON.stringify({
-    //     sender: sender,
-    //     connect:"",
-    //     type: 'JOIN'
-    // }))
-
+    const subscribe = stompClient.subscribe('/topic/room/' + room,onMessageReceive)
+    subscribers.push({username: room, subscribe})
 }
 
 export function subscribeGlobalChat() {
@@ -87,14 +73,13 @@ export function subscribeGlobalChat() {
 }
 
 // TODO: Rewrite parameters on give Room class
-export function unsubscribe(roomId) {
-    console.log('roomId = ' + roomId)
-    let index = subscribers.findIndex(value => value.id = roomId);
+export function unsubscribe(username) {
+    let index = subscribers.findIndex(value => value.username = username);
     if (index > -1) {
-        stompClient.unsubscribe(subscribers[index].subscribe)
+        subscribers[index].subscribe.unsubscribe()
         subscribers.splice(index, 1)
     } else {
-        console.error("Not found subscription. Room id: " + roomId)
-        error(subscribers) // ??
+        console.error("Not found subscription. Room id: " + username)
+        console.error(subscribers)
     }
 }
