@@ -50,8 +50,7 @@ public class UserService implements UserManager {
     @Override
     public void createUser(UserDetails user) {
         Assert.isTrue(!userExists(user.getUsername()), "User should not exist!");
-        log.debug("{}",user);
-        log.debug("{}",(User) user);
+        log.debug("{}", user);
         userRepo.save((User) user);
     }
 

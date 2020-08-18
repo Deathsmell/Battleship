@@ -2,4 +2,16 @@ logging:
   level:
     by.deathsmell: debug
   file:
-    path: /Useer/batlleship/
+    path: /User/batlleship/
+
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/battleship"
+    driver-class-name: org.postgresql.Driver
+    username: ${username_db:deathsmell}
+    password: ${password_db:123}
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: validate

@@ -81,13 +81,10 @@ public class RoomService implements RoomCreator {
 
     @Override
     public void roomDestroy(@Nullable String username) {
-        Room room = null;
         log.debug("Starting room destroy event. Input values: username - {}",
                 username);
 
-
-        room = roomRepo.findRoomByHostOrOpponent(username);
-
+        Room room = roomRepo.findRoomByHostOrOpponent(username);
 
         log.debug("Move in db and get {}", room);
         if (room != null) {

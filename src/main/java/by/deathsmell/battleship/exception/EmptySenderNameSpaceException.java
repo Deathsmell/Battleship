@@ -1,6 +1,6 @@
 package by.deathsmell.battleship.exception;
 
-public class EmptySenderNameSpaceException extends Exception {
+public class EmptySenderNameSpaceException extends IllegalSenderAction {
     public EmptySenderNameSpaceException() {
         super();
     }

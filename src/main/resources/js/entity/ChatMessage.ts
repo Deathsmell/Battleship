@@ -1,17 +1,18 @@
 import {RoomInterface} from "./Room";
 
 export interface ChatMessageInterface {
-    type?: String,
-    content?: String,
-    sender?: String,
+    type?: string,
+    content?: string,
+    sender?: string,
     room?: RoomInterface
 }
 
+
 export class ChatMessage implements ChatMessageInterface {
-    private _content: String;
+    private _content: string;
     private _room: RoomInterface;
-    private _sender: String;
-    private _type: String;
+    private _sender: string;
+    private _type: string;
 
 
     constructor(obj?: ChatMessageInterface) {
@@ -22,11 +23,11 @@ export class ChatMessage implements ChatMessageInterface {
     }
 
 
-    get content(): String {
+    get content(): string {
         return this._content;
     }
 
-    set content(value: String) {
+    set content(value: string) {
         this._content = value;
     }
 
@@ -38,19 +39,19 @@ export class ChatMessage implements ChatMessageInterface {
         this._room = value;
     }
 
-    get sender(): String {
+    get sender(): string {
         return this._sender;
     }
 
-    set sender(value: String) {
+    set sender(value: string) {
         this._sender = value;
     }
 
-    get type(): String {
+    get type(): string {
         return this._type;
     }
 
-    set type(value: String) {
+    set type(value: string) {
         this._type = value;
     }
 

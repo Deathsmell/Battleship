@@ -1,19 +1,19 @@
 export interface RoomInterface {
-    id?: Number | String,
-    room?: String,
-    host?: String,
-    opponent?: String,
-    roomStatus?: String,
-    createTime?: String | Date
+    id?: number | string,
+    room?: string,
+    host?: string,
+    opponent?: string,
+    roomStatus?: string,
+    createTime?: string | Date
 }
 
 export class Room implements RoomInterface {
-    private _createTime: String | Date;
-    private _host: String;
-    private _id: Number | String;
-    private _opponent: String;
-    private _room: String;
-    private _roomStatus: String;
+    private _createTime: string | Date;
+    private _host: string;
+    private _id: number | string;
+    private _opponent: string;
+    private _room: string;
+    private _roomStatus: string;
 
 
     constructor(obj?: RoomInterface) {
@@ -26,51 +26,51 @@ export class Room implements RoomInterface {
     }
 
 
-    get createTime(): String | Date {
+    get createTime(): string | Date {
         return this._createTime;
     }
 
-    set createTime(value: String | Date) {
+    set createTime(value: string | Date) {
         this._createTime = value;
     }
 
-    get host(): String {
+    get host(): string {
         return this._host === null ? '< none >' : this._host;
     }
 
-    set host(value: String) {
+    set host(value: string) {
         this._host = value;
     }
 
-    get id(): Number | String {
+    get id(): number | string {
         return this._id;
     }
 
-    set id(value: Number | String) {
+    set id(value: number | string) {
         this._id = value;
     }
 
-    get opponent(): String {
+    get opponent(): string {
         return this._opponent === null ? '< none >' : this._opponent;
     }
 
-    set opponent(value: String) {
+    set opponent(value: string) {
         this._opponent = value;
     }
 
-    get room(): String {
+    get room(): string {
         return this._room;
     }
 
-    set room(value: String) {
+    set room(value: string) {
         this._room = value;
     }
 
-    get roomStatus(): String {
+    get roomStatus(): string {
         return this._roomStatus;
     }
 
-    set roomStatus(value: String) {
+    set roomStatus(value: string) {
         this._roomStatus = value;
     }
 

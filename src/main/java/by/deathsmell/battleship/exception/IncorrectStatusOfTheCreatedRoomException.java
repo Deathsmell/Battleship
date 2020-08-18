@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
-public class IncorrectStatusOfTheCreatedRoomException extends Throwable {
+public class IncorrectStatusOfTheCreatedRoomException extends IllegalSenderAction {
     public IncorrectStatusOfTheCreatedRoomException() {
         super();
     }

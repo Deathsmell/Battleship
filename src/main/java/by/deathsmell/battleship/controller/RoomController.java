@@ -2,24 +2,19 @@ package by.deathsmell.battleship.controller;
 
 import by.deathsmell.battleship.domain.Room;
 import by.deathsmell.battleship.domain.User;
-import by.deathsmell.battleship.dto.ChatMessage;
 import by.deathsmell.battleship.exception.EmptySenderNameSpaceException;
 import by.deathsmell.battleship.exception.IllegalRoomStateException;
-import by.deathsmell.battleship.exception.IncorrectStatusMessageExeption;
+import by.deathsmell.battleship.exception.IncorrectStatusMessageException;
 import by.deathsmell.battleship.exception.IncorrectStatusOfTheCreatedRoomException;
 import by.deathsmell.battleship.repositories.RoomRepository;
-import by.deathsmell.battleship.service.ReportMessageCreator;
 import by.deathsmell.battleship.service.RoomCreator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.*;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,7 +61,7 @@ public class RoomController {
         try {
             roomCreator.joinToRoom(room, user);
         } catch (IncorrectStatusOfTheCreatedRoomException |
-                IncorrectStatusMessageExeption |
+                IncorrectStatusMessageException |
                 IllegalRoomStateException |
                 EmptySenderNameSpaceException e) {
             e.printStackTrace();
