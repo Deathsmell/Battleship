@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.cruisers</OriginalElement>
+  <nodes>
+    <node x="0.0" y="606.0">7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.submarines</node>
+    <node x="225.18229166666669" y="202.5">7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.user_roles</node>
+    <node x="338.0" y="606.0">7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.destroyers</node>
+    <node x="142.08854166666669" y="0.0">7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.usr</node>
+    <node x="168.46354166666669" y="381.0">7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.desk</node>
+    <node x="169.00000000000003" y="606.0">7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.cruisers</node>
+    <node x="24.182291666666686" y="156.0">7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.room</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.destroyers" target="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.desk">
+      <point x="0.0" y="-64.0" />
+      <point x="412.5" y="581.0" />
+      <point x="292.63020833333337" y="581.0" />
+      <point x="49.666666666666686" y="87.5" />
+    </edge>
+    <edge source="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.cruisers" target="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.desk">
+      <point x="0.0" y="-64.0" />
+      <point x="0.0" y="87.5" />
+    </edge>
+    <edge source="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.desk" target="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.room">
+      <point x="-37.25" y="-87.5" />
+      <point x="205.71354166666669" y="356.0" />
+      <point x="114.68229166666669" y="356.0" />
+      <point x="0.0" y="87.5" />
+    </edge>
+    <edge source="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.submarines" target="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.desk">
+      <point x="-2.8421709430404007E-14" y="-64.0" />
+      <point x="74.49999999999997" y="581.0" />
+      <point x="193.29687500000003" y="581.0" />
+      <point x="-49.66666666666666" y="87.5" />
+    </edge>
+    <edge source="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.desk" target="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.usr">
+      <point x="37.25" y="-87.5" />
+      <point x="280.2135416666667" y="356.0" />
+      <point x="372.6822916666667" y="356.0" />
+      <point x="372.6822916666667" y="126.0" />
+      <point x="289.08854166666663" y="126.0" />
+      <point x="62.99999999999997" y="53.0" />
+    </edge>
+    <edge source="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.user_roles" target="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.usr">
+      <point x="0.0" y="-41.0" />
+      <point x="293.6822916666667" y="136.0" />
+      <point x="247.08854166666669" y="136.0" />
+      <point x="21.0" y="53.0" />
+    </edge>
+    <edge source="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.room" target="7ceadece-5204-41ba-a886-eea26b13dd94.TABLE:battleship.public.usr">
+      <point x="45.25" y="-87.5" />
+      <point x="159.93229166666669" y="136.0" />
+      <point x="205.08854166666669" y="136.0" />
+      <point x="-21.0" y="53.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.2999999999999998" x="269.3163919413918" y="345.1657509157511" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

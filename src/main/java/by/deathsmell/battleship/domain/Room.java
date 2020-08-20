@@ -9,10 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,8 +25,14 @@ public class Room {
 
     @JsonDeserialize(using = CustomUuidDeserializer.class)
     private UUID room;
-    private String host;
-    private String opponent;
+
+    @OneToOne
+    private User host;
+
+    @OneToOne
+    private User opponent;
+
+    @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
@@ -53,8 +56,8 @@ public class Room {
     public static class RoomBuilder {
         private Long id;
         private UUID room;
-        private String host;
-        private String opponent;
+        private User host;
+        private User opponent;
         private RoomStatus roomStatus;
         private LocalDateTime createTime;
 
@@ -69,13 +72,13 @@ public class Room {
             return this;
         }
 
-        public RoomBuilder host(String host) {
+        public RoomBuilder host(User host) {
             Assert.notNull(host,"host cannot be null");
             this.host = host;
             return this;
         }
 
-        public RoomBuilder opponent(String opponent) {
+        public RoomBuilder opponent(User opponent) {
             Assert.notNull(opponent,"opponent cannot be null");
             this.opponent = opponent;
             return this;
