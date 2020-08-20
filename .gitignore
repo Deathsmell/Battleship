@@ -9,3 +9,4 @@
 /gradle/
 /.idea/
 /src/main/resources/static/js/main.js
+/src/main/java/by/deathsmell/battleship/Helper.java

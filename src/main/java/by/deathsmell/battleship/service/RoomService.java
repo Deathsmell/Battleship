@@ -57,9 +57,9 @@ public class RoomService implements RoomCreator {
                 log.debug("Find room in DB. Room: {}", roomFromDb);
                 RoomStatus roomStatus = roomFromDb.getRoomStatus();
                 if (roomStatus == CREATE) {
-                    joinFirstPlayer(room, sender, roomFromDb);
+                    joinFirstPlayer(room, user, roomFromDb);
                 } else if (roomStatus == WAIT) {
-                    joinSecondPlayer(sender, roomFromDb);
+                    joinSecondPlayer(user, roomFromDb);
                 } else {
                     log.error("While joining to room a room status be or become illegal");
                     throw new IllegalRoomStateException("While joining to room a room status be or become illegal");
@@ -88,8 +88,13 @@ public class RoomService implements RoomCreator {
 
         log.debug("Move in db and get {}", room);
         if (room != null) {
-            boolean hasHost = username.equals(room.getHost());
-            boolean hasOpponent = username.equals(room.getOpponent());
+
+            String host = room.getHost().getUsername();
+            boolean hasHost = username.equals(host);
+
+            String opponent = room.getOpponent().getUsername();
+            boolean hasOpponent = username.equals(opponent);
+
             if (hasHost && hasOpponent) {
                 log.error("Sender listed in two room slots. Illegal room state. Sender : {}", username);
                 throw new IllegalRoomStateException();
@@ -120,7 +125,7 @@ public class RoomService implements RoomCreator {
     }
 
 
-    private void joinFirstPlayer(UUID roomId, String sender, Room roomFromDb)
+    private void joinFirstPlayer(UUID roomId, User sender, Room roomFromDb)
             throws IncorrectStatusOfTheCreatedRoomException {
         if (null == roomFromDb.getHost() && null == roomFromDb.getOpponent()) {
             roomFromDb.setHost(sender);
@@ -135,7 +140,7 @@ public class RoomService implements RoomCreator {
         }
     }
 
-    private void joinSecondPlayer(String sender, Room roomFromDb)
+    private void joinSecondPlayer(User sender, Room roomFromDb)
             throws IncorrectStatusOfTheCreatedRoomException {
         if (!sender.equals(roomFromDb.getHost()) && null == roomFromDb.getOpponent()) {
             roomFromDb.setOpponent(sender);
