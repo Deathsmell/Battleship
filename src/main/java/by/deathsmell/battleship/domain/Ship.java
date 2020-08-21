@@ -4,18 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embeddable;
-import java.awt.*;
-
-@Embeddable
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ship {
-
-    private Point startPosition;
-
-    private Point endPosition;
 
     private ShipType shipType;
 

@@ -2,15 +2,16 @@ package by.deathsmell.battleship.service;
 
 import by.deathsmell.battleship.domain.Desk;
 import by.deathsmell.battleship.domain.Room;
-import by.deathsmell.battleship.domain.Ship;
 import by.deathsmell.battleship.domain.User;
 import by.deathsmell.battleship.dto.ChatMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static by.deathsmell.battleship.domain.Ship.ShipType.*;
 
@@ -35,7 +36,9 @@ public class BattlefieldService implements DeskCreator, DeskValidator {
     }
 
     @Override
-    public Desk createDesk(User user, Room room, int[][] field) {
+    public Desk createDesk(User user, Room room, int[][] field) throws IllegalArgumentException {
+        Assert.notNull(room, "Room should not be empty");
+        Assert.notNull(user, "User should not be empty");
         boolean valid = this.fieldValidator(field, true);
         if (valid) {
             return builder
@@ -59,7 +62,7 @@ public class BattlefieldService implements DeskCreator, DeskValidator {
     public boolean isValid(int[][] field) {
 //        return new BattlefieldService(reportChatMessage).fieldValidator(field, false);
         // TODO: 8/19/20 uncomment this row then use in Spring app
-        return fieldValidator(field,false);
+        return fieldValidator(field, false);
     }
 
     private String witchType(int i) {
@@ -101,25 +104,36 @@ public class BattlefieldService implements DeskCreator, DeskValidator {
         if (typeShip < 0 || typeShip > 4) {
             throw new IllegalArgumentException("Ship should be one to four");
         }
+        Set<Point> ship = createSetPoints(typeShip, startX, startY, endX, endY);
+
+        builder.points(ship);
+    }
+
+    private Set<Point> createSetPoints(int typeShip, int startX, int startY, int endX, int endY) {
+        HashSet<Point> points = new HashSet<>();
+
         Point startPosition = new Point(startX, startY);
+        points.add(startPosition);
+
         Point endPosition;
-        if (startX != endX) {
+        boolean changeX = (startX != endX);
+        if (changeX) {
             endPosition = new Point(endX - 1, endY);
         } else {
             endPosition = new Point(endX, endY - 1);
         }
 
-        switch (typeShip) {
-            case 2:
-                builder.destroyer(new Ship(startPosition, endPosition, DESTROYER));
-                break;
-            case 3:
-                builder.cruiser(new Ship(startPosition, endPosition, CRUISER));
-                break;
-            case 4:
-                builder.battleship(new Ship(startPosition, endPosition, BATTLESHIP));
-                break;
+        points.add(endPosition);
+
+        for (int i = 1; i < typeShip; i++) {
+            if (changeX) {
+                points.add(new Point(startX + i, endY));
+            } else {
+                points.add(new Point(endX, startY + i));
+            }
         }
+
+        return points;
     }
 
     protected boolean fieldValidator(int[][] field, boolean buildDesk) {
@@ -159,10 +173,12 @@ public class BattlefieldService implements DeskCreator, DeskValidator {
                     }
 
                     if (count == 1) {
+
                         if (buildDesk) {
                             Point point = new Point(fieldX, fieldY);
-                            builder.submarine(new Ship(point, point, SUBMARINE));
+                            builder.point(point);
                         }
+
                         array[1]--;
                         continue;
                     }

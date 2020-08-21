@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.*;
+import java.util.*;
 //import java.util.UUID;
 
 @Entity
@@ -19,19 +19,8 @@ public class Desk {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Ship battleship;
-
-    @ElementCollection(targetClass = Ship.class, fetch = FetchType.LAZY)
-    @CollectionTable(name = "cruisers", joinColumns = @JoinColumn(name = "desk_id"), foreignKey = @ForeignKey(name = "cruisers_desk_id_fk"))
-    private List<Ship> cruisers;
-
-    @ElementCollection(targetClass = Ship.class, fetch = FetchType.LAZY)
-    @CollectionTable(name = "destroyers", joinColumns = @JoinColumn(name = "desk_id"), foreignKey = @ForeignKey(name = "destroyers_desk_id_fk"))
-    private List<Ship> destroyers;
-
-    @ElementCollection(targetClass = Ship.class, fetch = FetchType.LAZY)
-    @CollectionTable(name = "submarines", joinColumns = @JoinColumn(name = "desk_id"), foreignKey = @ForeignKey(name = "submarines_desk_id_fk"))
-    private List<Ship> submarines;
+    @ElementCollection(targetClass = Point.class)
+    private Set<Point> points;
 
     @OneToOne
     private Room room;
@@ -57,62 +46,29 @@ public class Desk {
 
     public static class DeskBuilder {
 
-        private Ship battleship;
-
-        private List<Ship> cruisers;
-
-        private List<Ship> destroyers;
-
-        private List<Ship> submarines;
+        private Set<Point> points;
 
         private Room room;
 
         private User user;
 
-        public DeskBuilder battleship(Ship battleship) {
-            this.battleship = battleship;
-            return this;
-        }
 
-        public DeskBuilder cruisers(List<Ship> cruisers) {
-            this.cruisers = cruisers;
-            return this;
-        }
-
-        public DeskBuilder cruiser(Ship cruiser) {
-            if (this.cruisers == null) {
-                this.cruisers = new ArrayList<>();
+        public DeskBuilder point(Point point){
+            if (this.points == null){
+                this.points = new HashSet<>();
             }
-            this.cruisers.add(cruiser);
+            this.points.add(point);
             return this;
         }
 
-        public DeskBuilder destroyers(List<Ship> destroyers) {
-            this.destroyers = destroyers;
-            return this;
-        }
-
-        public DeskBuilder destroyer(Ship destroyer) {
-            if (this.destroyers == null){
-                this.destroyers = new ArrayList<>();
+        public DeskBuilder points(Set<Point> points) {
+            if (this.points == null){
+                this.points = points;
+            } else {
+                this.points.addAll(points);
             }
-            this.destroyers.add(destroyer);
             return this;
         }
-
-        public DeskBuilder submarines(List<Ship> submarines) {
-            this.submarines = submarines;
-            return this;
-        }
-
-        public DeskBuilder submarine(Ship submarine) {
-            if (this.submarines == null) {
-                this.submarines = new ArrayList<>();
-            }
-            this.submarines.add(submarine);
-            return this;
-        }
-
 
         public DeskBuilder room(Room room) {
             this.room = room;
@@ -130,7 +86,9 @@ public class Desk {
 //        }
 
         public Desk build() {
-            return new Desk(null, battleship, cruisers, destroyers, submarines, room, user);
+            return new Desk(null, points, room, user);
         }
+
+
     }
 }
